@@ -1,7 +1,7 @@
 <template>
 <div :class="{ open: showMenu }">
   <div class="notifications-toggle toggle" @click="showMenu = !showMenu">
-    <eva-icon name="swap-outline"></eva-icon>
+    <eva-icon name="bell-outline"></eva-icon>
   </div>
   <div class="notifications" v-if="showMenu">
     <h3>History</h3>
@@ -83,15 +83,11 @@ export default {
 .notifications {
   height: 350px;
   overflow-y: auto;
-  top: 60px;
-  background-color: rgba(50, 50, 50, .5);
-  backdrop-filter: blur(20px) brightness(0.5);
-  color: white;
 }
 
 .notification-history {
   padding: 8px 10px;
-  border-top: 1px solid rgba(255, 255, 255, .2);
+  border-top: 1px solid rgba(0, 0, 0, .2);
 }
 
 @keyframes notifications {

@@ -6,7 +6,7 @@
     <div class="store" v-if="showMenu">
       <div class="store-inner">
         <h3>Store</h3>
-        <button @click="buyGate">Build gate ($50,000)</button>
+        <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 16 }">Build gate ($50,000)</button>
       </div>
     </div>
   </div>

@@ -30,9 +30,14 @@ export default {
 .board {
   position: relative;
   overflow: hidden;
-  background-color: #36e679;
+  background-color: #d9e4e6;
   width: 100%;
   padding-top: 45%;
+  transition: all 2s;
+}
+
+.airport-closed .board {
+  background-color: #232627;
 }
 
 .runway {
@@ -41,19 +46,29 @@ export default {
   left: 82%;
   width: 3%;
   height: 80%;
-  background-color: rgb(185, 185, 185);
-  border: 5px solid rgb(228, 228, 228);
+  background-color: rgb(168, 168, 168);
+  transition: all 2s;
+}
+
+.airport-closed .runway {
+  background-color: black;
 }
 
 .terminal {
   position: absolute;
-  top: 21%;
+  top: 31%;
   left: 5%;
   width: 70%;
   height: 30%;
-  background-color: grey;
-  border: 5px solid rgb(107, 107, 107);
-  border-radius: 20px;
+  /* background-image: url('/static/img/Terminal.png');
+  background-size: 100% 100%; */
+  background-color: white;
+  box-shadow: 0 0 40px -10px rgba(0, 0, 0, .3);
+  transition: all 2s;
+}
 
+.airport-closed .terminal {
+  box-shadow: 0 0 40px -10px rgba(255, 187, 0, 0.479);
+  background-color: black;
 }
 </style>

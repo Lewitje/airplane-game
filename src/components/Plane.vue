@@ -5,10 +5,10 @@
     @click="bump"
     @click.shift="cheat">
 
-    <div class="takeoff" v-if="readyForTakeoff" @click="requestTakeoff">Ready for takeoff!</div>
-    <div class="info" v-else-if="plane.unboarding">{{ plane.boarded }} to unboard</div>
-    <div class="waiting" v-else-if="plane.requestedTakeoff">Waiting for takeoff</div>
-    <div class="info" v-else>{{ plane.passengerCapacity - plane.boarded }} to board</div>    
+    <div class="sign takeoff" v-if="readyForTakeoff" @click="requestTakeoff" :class="{ disabled: !$root.airport.open }"><eva-icon name="checkmark-outline" width="18" height="18"></eva-icon></div>
+    <div class="sign info" v-else-if="plane.unboarding"><eva-icon name="trending-down-outline" width="18" height="18"></eva-icon> {{ plane.boarded }}</div>
+    <div class="sign waiting" v-else-if="plane.requestedTakeoff"><eva-icon name="clock-outline" width="18" height="18"></eva-icon></div>
+    <div class="sign info" v-else><eva-icon name="trending-up-outline" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
   </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
     this.plane.fuelled = true
     setInterval(() => {
       this.tick()
-    }, 1000)
+    }, 250)
   },
   computed: {
     planePositionX () {
@@ -39,15 +39,19 @@ export default {
         return '150%'
       } else if (this.plane.takingOff || this.plane.landing) {
         return '82%'
+      } else if (this.gate.gateNumber > 8) {
+        return 3 + (this.plane.gate - 8) * 8 + '%'
       } else {
         return 3 + this.plane.gate * 8 + '%'
       }
     },
     planePositionY () {
       if (this.plane.landing || this.plane.takingOff) {
-        return 12 + '%'
+        return '12%'
+      } else if (this.gate.gateNumber > 8) {
+        return '62%'
       } else {
-        return 10 + '%'
+        return '20%'
       }
     }
   },
@@ -172,7 +176,7 @@ export default {
 }
 
 .plane.unboarding .info {
-  background-color: purple;
+  background-color: rgb(238, 68, 82);
 }
 
 @keyframes plane-landing {
@@ -198,19 +202,35 @@ export default {
   display: none !important;
 }
 
-.info,
-.waiting,
-.takeoff {
+.sign {
   position: absolute;
   top: -14px;
-  left: calc(50% - 60px);
-  width: 120px;
+  left: calc(50% - 30px);
+  width: 60px;
   height: 24px;
   line-height: 24px;
-  background-color: black;
+  background-color: rgb(0, 214, 107);
   border-radius: 30px;
   transition: all .25s;
   z-index: 3;
+  font-size: 12px;
+  letter-spacing: -0.05em;
+  fill: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign.disabled {
+  background-color: rgb(167, 167, 167);
+  fill: rgb(206, 206, 206);
+  pointer-events: none;
+}
+
+.sign .eva-hover {
+  margin: 0 3px !important;
+  width: 18px;
+  height: 18px;
 }
 
 .takeoff,
@@ -218,6 +238,8 @@ export default {
   background-color: hsl(215deg, 100%, 50%);
   color: white;
   top: calc(50% - 12px);
+  width: 60px;
+  left: calc(50% - 30px);
   opacity: 1;
 }
 
@@ -233,5 +255,6 @@ export default {
   transition: none;
   background-color: white;
   color: black;
+  fill: black;
 }
 </style>

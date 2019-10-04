@@ -1,12 +1,13 @@
 <template>
   <div class="gate"
-      :style="{ left: 2 + gate.gateNumber * 8 + '%' }"
+      :style="{ left: getXPosition, top: getYPosition }"
       @click="showMenu = !showMenu">
       <div class="number">{{ gate.gateNumber }}</div>
       <div class="menu" v-if="showMenu">
-        <h3>Upgrades</h3>
+        <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers per tick</h4>
         <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 2 }} (${{ (gate.passengersPerTick * 2) * 500 }})</button>
+        <div class="text-faded">Click to dismiss</div>
       </div>
   </div>
 </template>
@@ -27,6 +28,20 @@ export default {
   mounted () {
   },
   computed: {
+    getXPosition () {
+      let x = 2 + this.gate.gateNumber * 8 + '%'
+      if (this.gate.gateNumber > 8) {
+        x = 2 + (this.gate.gateNumber - 8) * 8 + '%'
+      }
+      return x
+    },
+    getYPosition () {
+      let y = '19%'
+      if (this.gate.gateNumber > 8) {
+        y = '61%'
+      }
+      return y
+    }
   },
   methods: {
     upgrade () {
@@ -45,20 +60,30 @@ export default {
   position: absolute;
   width: 5%;
   height: 12%;
-  top: 9%;
-  background-color: grey;
-  border: 4px solid orange;
+  /* background-image: url('/static/img/Gate.png');
+  background-size: 100% 100%; */
+  background-color: white;
   transition: all .2s;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 2s;
+}
+
+.airport-closed .gate {
+  background-color: rgb(51, 51, 51);
 }
 
 .number {
-  color: white;
+  color: rgb(190, 190, 190);
   font-size: 30px;
   font-weight: 700;
+  transition: all 2s;
+}
+
+.airport-closed .number {
+  color: black;
 }
 
 .gate:hover {
@@ -68,9 +93,9 @@ export default {
 .menu {
   position: absolute;
   top: 0;
-  left: calc(50% - 150px);
-  width: 300px;
-  padding: 30px;
+  left: calc(50% - 100px);
+  width: 200px;
+  padding: 30px 15px;
   border-radius: 10px;
   z-index: 5;
   background-color: white;

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
     <main>
       <notifications></notifications>
       <board>
@@ -83,6 +83,10 @@ h3 {
   font-size: 20px;
 }
 
+.text-faded {
+  opacity: 0.33;
+}
+
 button {
   appearance: none;
   border: 0;
@@ -96,6 +100,18 @@ button {
   font-weight: bold;
   cursor: pointer;
   font-size: 14px;
+  margin-bottom: 10px;
+  transition: all .1s;
+  outline: none;
+}
+
+button:hover {
+  background-color: black;
+  color: white;
+}
+
+button:active {
+  transform: scale(0.95);
 }
 
 button.disabled {
@@ -126,6 +142,11 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all .1s;
+}
+
+.toggle:active {
+  transform: scale(0.9);
 }
 
 .toggle svg {
@@ -134,7 +155,7 @@ main {
 }
 
 .open .toggle {
-  background-color: black;
+  background-color: rgb(0, 231, 123);
 }
 
 .open .toggle svg {

@@ -35,7 +35,7 @@ const defaultSchedule = {
 
 const defaultGate = {
   gateNumber: 0,
-  passengersPerTick: 1,
+  passengersPerTick: 4,
   position: {
     x: 0,
     y: 0
@@ -50,7 +50,7 @@ new Vue({
   template: '<App/>',
   components: { App },
   data: {
-    mainTick: 0,
+    mainTick: 90,
     player: {
       planes: [],
       gates: [],
@@ -58,6 +58,7 @@ new Vue({
       scheduled: []
     },
     airport: {
+      open: true,
       takeoffQueue: [],
       landingQueue: [],
       runwayInUse: false,
@@ -101,9 +102,18 @@ new Vue({
         this.player.cash -= 5000
         bus.$emit('notification', 'Daily costs -5000')
       }
+
+      if (this.mainTick < 30 || this.mainTick > 100) {
+        this.airport.open = false
+      } else {
+        this.airport.open = true
+      }
     },
     generateRandomLandings () {
-      if (Math.random() < 0.2 && this.airport.landingQueue.length < 3) {
+      if (!this.airport.open) {
+        return false
+      }
+      if (Math.random() < 0.9 && this.airport.landingQueue.length < 3) {
         let plane = _.cloneDeep(defaultPlane)
         plane.landing = false
         plane.requestedLanding = true
@@ -125,7 +135,7 @@ new Vue({
       return x
     },
     buyGate () {
-      if (this.player.gates.length >= 8 || this.player.cash < 50000) {
+      if (this.player.gates.length >= 16 || this.player.cash < 50000) {
         return false
       }
       console.log('buying gate')
@@ -183,9 +193,15 @@ new Vue({
     checkLandings () {
       if (!this.airport.landingQueue.length) {
         return false
-      }
-
-      if (!this.airport.runwayInUse) {
+      } else if (!this.airport.open) {
+        this.airport.landingQueue.forEach((item) => {
+          console.log('airport closed queue item ', item)
+          let i = _.findIndex(this.player.planes, { id: item })
+          console.log('deleting', i)
+          this.$delete(this.player.planes, i)
+        })
+        this.airport.landingQueue = []
+      } else if (!this.airport.runwayInUse) {
         let plane = _.find(this.player.planes, { id: this.airport.landingQueue[0] })
         console.log('trying to land', plane, this.findFreeGate())
         if (plane && this.findFreeGate()) {

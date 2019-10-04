@@ -1,11 +1,13 @@
 <template>
   <div class="status-bar-wrapper">
     <div class="status-bar">
+      <div class="status-bar-item" title="Airport open/closed">
+        <eva-icon v-if="$root.airport.open" name="sun-outline"></eva-icon>
+        <eva-icon v-else name="moon-outline"></eva-icon>
+        <span>{{ Math.floor($root.mainTick / 5) }}:00</span>
+      </div>
       <div class="status-bar-item" title="Balance">
         <eva-icon name="credit-card-outline"></eva-icon> <span>{{ getCash }}</span>
-      </div>
-      <div class="status-bar-item" title="Time">
-        <eva-icon name="clock-outline"></eva-icon> <span>{{ Math.floor($root.mainTick / 5) }}:00</span>
       </div>
       <div class="status-bar-item" title="Waiting to takeoff">
         <eva-icon name="diagonal-arrow-right-up-outline"></eva-icon> <span>{{ $root.airport.takeoffQueue.length }}</span>
@@ -124,5 +126,6 @@ export default {
 .status-bar-item span {
   font-size: 16px;
   letter-spacing: -0.05em;
+  padding-left: 3px;
 }
 </style>
