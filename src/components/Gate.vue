@@ -2,8 +2,11 @@
   <div class="gate"
       :style="{ left: 2 + gate.gateNumber * 8 + '%' }"
       @click="showMenu = !showMenu">
+      <div class="number">{{ gate.gateNumber }}</div>
       <div class="menu" v-if="showMenu">
-        <button @click="upgrade">Upgrade PPM {{ gate.passengersPerTick }}</button>
+        <h3>Upgrades</h3>
+        <h4>Passengers per tick</h4>
+        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 2 }} (${{ (gate.passengersPerTick * 2) * 500 }})</button>
       </div>
   </div>
 </template>
@@ -27,7 +30,10 @@ export default {
   },
   methods: {
     upgrade () {
-      this.gate.passengersPerTick += 10
+      let price = (this.gate.passengersPerTick * 2) * 500
+      this.gate.passengersPerTick = this.gate.passengersPerTick * 2
+      this.$root.player.cash -= price
+      bus.$emit('notification', `Upgraded gate -${price}`)
     }
   }
 }
@@ -44,6 +50,15 @@ export default {
   border: 4px solid orange;
   transition: all .2s;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.number {
+  color: white;
+  font-size: 30px;
+  font-weight: 700;
 }
 
 .gate:hover {
@@ -53,13 +68,13 @@ export default {
 .menu {
   position: absolute;
   top: 0;
-  left: calc(50% - 100px);
-  width: 200px;
+  left: calc(50% - 150px);
+  width: 300px;
   padding: 30px;
   border-radius: 10px;
   z-index: 5;
   background-color: white;
-  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, .05);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .4);
   animation: menu .5s forwards cubic-bezier(.2, 1.5, .5, 1);
   opacity: 0;
 }

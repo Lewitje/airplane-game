@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import _ from 'lodash'
+import EvaIcons from 'vue-eva-icons'
+
+Vue.use(EvaIcons)
 
 export const bus = new Vue()
 
@@ -72,7 +75,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 50000
+    this.player.cash = 5000000
     this.buyGate()
 
     setInterval(() => {

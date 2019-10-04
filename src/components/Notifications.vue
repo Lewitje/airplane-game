@@ -1,8 +1,10 @@
 <template>
 <div :class="{ open: showMenu }">
-  <div class="notifications-toggle toggle" @click="showMenu = !showMenu">🔔</div>
+  <div class="notifications-toggle toggle" @click="showMenu = !showMenu">
+    <eva-icon name="swap-outline"></eva-icon>
+  </div>
   <div class="notifications" v-if="showMenu">
-    History
+    <h3>History</h3>
     <div class="notification-history" v-for="(item, i) in history" :key="i">
       {{ item.content }}
     </div>
@@ -15,6 +17,7 @@
 
 <script>
 import { bus } from '@/main'
+
 export default {
   name: 'notifications',
   components: {
@@ -74,19 +77,21 @@ export default {
   background-color: black;
   color: white;
   cursor: pointer;
+  padding: 10px 15px;
 }
 
 .notifications {
   height: 350px;
   overflow-y: auto;
   top: 60px;
+  background-color: rgba(50, 50, 50, .5);
+  backdrop-filter: blur(20px) brightness(0.5);
+  color: white;
 }
 
 .notification-history {
-  padding: 5px 10px;
-  background-color: rgba(0, 0, 0, 0.1);
-  margin: 5px 0;
-  border-radius: 3px;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255, 255, 255, .2);
 }
 
 @keyframes notifications {

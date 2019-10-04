@@ -1,11 +1,12 @@
 <template>
   <div :class="{ open: showMenu }">
-    <div class="store-toggle toggle" @click="showMenu = !showMenu">🛒</div>
+    <div class="store-toggle toggle" @click="showMenu = !showMenu">
+      <eva-icon name="shopping-cart-outline"></eva-icon>
+    </div>
     <div class="store" v-if="showMenu">
       <div class="store-inner">
-        <button @click="buyPlane">Buy plane ($10,000)</button>
-        <button @click="buyGate">Buy gate ($50,000)</button>
-        <button @click="buySchedule">Buy schedule</button>
+        <h3>Store</h3>
+        <button @click="buyGate">Build gate ($50,000)</button>
       </div>
     </div>
   </div>
@@ -44,7 +45,7 @@ export default {
 <style scoped>
 .store {
   position: fixed;
-  bottom: 0;
+  bottom: 45px;
   left: 0;
   width: 100%;
 }
@@ -55,7 +56,7 @@ export default {
   max-width: 700px;
   background-color: white;
   padding: 15px;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .store-toggle {

@@ -43,8 +43,64 @@ export default {
 }
 
 body {
-  font-family: 'hind medium';
   text-align: center;
+  font-size: 14px;
+}
+
+body,
+button,
+input,
+textarea {
+  font-family: 'Hind Medium', sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+h4,
+h5 {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+p {
+  margin-bottom: 5px;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 25px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  box-shadow: none;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 30px;
+  height: 30px;
+  padding: 0 10px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button.disabled {
+  pointer-events: none;
+  opacity: .5;
 }
 
 main {
@@ -67,11 +123,21 @@ main {
   z-index: 9;
   box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .5);
   cursor: pointer;
-  line-height: 60px;
-  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toggle svg {
+  width: 30px;
+  height: 30px;
 }
 
 .open .toggle {
   background-color: black;
+}
+
+.open .toggle svg {
+  fill: white;
 }
 </style>

@@ -3,11 +3,11 @@
     :class="{ 'taking-off': plane.takingOff, fuelled: plane.fuelled, landing: plane.landing, unboarding: plane.unboarding }"
     :style="{ top: planePositionY, left: planePositionX }"
     @click="bump"
-    @click.ctrl="cheat">
+    @click.shift="cheat">
 
     <div class="takeoff" v-if="readyForTakeoff" @click="requestTakeoff">Ready for takeoff!</div>
     <div class="info" v-else-if="plane.unboarding">{{ plane.boarded }} to unboard</div>
-    <div class="waiting" v-else-if="plane.requestedTakeoff">waiting for takeoff</div>
+    <div class="waiting" v-else-if="plane.requestedTakeoff">Waiting for takeoff</div>
     <div class="info" v-else>{{ plane.passengerCapacity - plane.boarded }} to board</div>    
   </div>
 </template>
@@ -193,18 +193,22 @@ export default {
   }
 }
 
+.taking-off .waiting,
+.landing .info {
+  display: none !important;
+}
+
 .info,
 .waiting,
 .takeoff {
   position: absolute;
-  top: -10px;
+  top: -14px;
   left: calc(50% - 60px);
   width: 120px;
   height: 24px;
   line-height: 24px;
   background-color: black;
   border-radius: 30px;
-  opacity: 0.33;
   transition: all .25s;
   z-index: 3;
 }
@@ -213,7 +217,7 @@ export default {
 .waiting {
   background-color: hsl(215deg, 100%, 50%);
   color: white;
-  top: 20px;
+  top: calc(50% - 12px);
   opacity: 1;
 }
 
@@ -222,16 +226,11 @@ export default {
 }
 
 .takeoff:hover {
-  background-color: hsl(215deg, 100%, 40%);
-}
-
-.plane:hover .info {
-  opacity: 1;
+  background-color: hsl(215deg, 100%, 60%);
 }
 
 .plane:active .info {
   transition: none;
-  opacity: 1;
   background-color: white;
   color: black;
 }

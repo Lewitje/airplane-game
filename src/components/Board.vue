@@ -30,7 +30,7 @@ export default {
 .board {
   position: relative;
   overflow: hidden;
-  background-color: lightgreen;
+  background-color: #36e679;
   width: 100%;
   padding-top: 45%;
 }
@@ -41,7 +41,8 @@ export default {
   left: 82%;
   width: 3%;
   height: 80%;
-  background-color: white;
+  background-color: rgb(185, 185, 185);
+  border: 5px solid rgb(228, 228, 228);
 }
 
 .terminal {
@@ -51,6 +52,8 @@ export default {
   width: 70%;
   height: 30%;
   background-color: grey;
-  border: 5px solid lightskyblue;
+  border: 5px solid rgb(107, 107, 107);
+  border-radius: 20px;
+
 }
 </style>
