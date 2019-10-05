@@ -2,7 +2,7 @@
   <div class="gate"
       :style="{ left: getXPosition, top: getYPosition }">
       <div class="number" @click="showMenu = !showMenu">{{ gate.gateNumber }}</div>
-      <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate"><eva-icon name="people-outline"></eva-icon></div>
+      <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate" title="Needs staff!"><eva-icon name="people-outline"></eva-icon></div>
       <div class="menu" v-if="showMenu">
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers per tick</h4>
@@ -111,18 +111,32 @@ export default {
   left: calc(50% - 20px);
   width: 40px;
   height: 40px;
-  background-color: hsl(215deg, 100%, 50%);
+  background-color: hsl(340deg, 100%, 50%);
   fill: white;
   border-radius: 50%;
   z-index: 4;
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: info 1s infinite;
+}
+
+@keyframes info {
+  0%,
+  100% {
+    transform: none;
+    background-color: hsl(340deg, 100%, 50%);
+  }
+  50% {
+    transform: scale(1.1);
+    background-color: hsl(340deg, 100%, 60%);
+
+  }
 }
 
 .menu {
   position: absolute;
-  top: 0;
+  top: -100px;
   left: calc(50% - 100px);
   width: 200px;
   padding: 30px 15px;

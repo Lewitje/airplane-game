@@ -1,10 +1,15 @@
 <template>
   <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
+    <div class="screen-too-small">
+      <h1>Small screen</h1>
+      <p>A screen with a minimum width of 600px is required to play this game.</p>
+    </div>
     <tutorial></tutorial>
     <main>
       <notifications></notifications>
       <div class="game-over" v-if="$root.gameOver">
         <h1>Game Over</h1>
+        <p>You went bankrupt</p>
       </div>
       <board v-else>
         <plane v-for="plane in $root.player.planes" :key="plane.id" :plane="plane"></plane>
@@ -72,7 +77,7 @@ h5 {
 }
 
 p {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 h1 {
@@ -85,6 +90,11 @@ h2 {
 
 h3 {
   font-size: 20px;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .text-faded {
@@ -152,6 +162,10 @@ main {
   background-color: #161718;
 }
 
+.airport-closed .game-over {
+  color: white;
+}
+
 .toggle {
   position: fixed;
   top: 30px;
@@ -190,5 +204,31 @@ main {
 
 .open .toggle svg {
   fill: white;
+}
+
+table {
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.screen-too-small {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  background-color: white;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .screen-too-small {
+    display: flex;
+  }
 }
 </style>

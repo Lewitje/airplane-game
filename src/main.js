@@ -55,7 +55,7 @@ new Vue({
   data: {
     gameTimer: null,
     gameOver: false,
-    mainTick: 50,
+    mainTick: 220,
     player: {
       planes: [],
       gates: [],
@@ -84,7 +84,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 160000
+    this.player.cash = 155000 * 1
     // this.buyGate()
 
     this.play()
@@ -115,7 +115,7 @@ new Vue({
     },
     updateDay () {
       this.mainTick++
-      if (this.mainTick === 120) {
+      if (this.mainTick === 240) {
         this.mainTick = 0
 
         // Terminal costs
@@ -133,11 +133,11 @@ new Vue({
         bus.$emit('notification', `Ground plane fine ${this.player.planes.length} X 2000 (-${groundedPlaneCosts})`)
       }
 
-      if (this.mainTick === 100) {
+      if (this.mainTick === 200) {
         bus.$emit('notification', 'The airport is closing soon, make sure the gates are empty to avoid fines.')
       }
 
-      if (this.mainTick < 30 || this.mainTick > 110) {
+      if (this.mainTick <= 60 || this.mainTick >= 220) {
         if (this.airport.open) {
           this.airport.open = false
           bus.$emit('notification', 'The airport has now closed. All remaining passengers will be unboarded, runways are closed. Boardings will resume when the airport opens in the morning.')
@@ -317,10 +317,14 @@ new Vue({
     }
   },
   watch: {
-    'player.cash' () {
+    'player.cash' (to, from) {
       if (this.player.cash <= 0) {
         this.gameOver = true
         this.pause()
+      }
+
+      if (this.player.cash < 10000 && from > 10000) {
+        bus.$emit('error', 'Your cash is getting low!')
       }
     }
   }

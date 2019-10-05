@@ -35,6 +35,8 @@
       <p>Click on planes to hurry up passengers.</p>
       <button @click="visible = false">Finish</button>
     </div>
+
+    <button @click="visible = false">Skip tutorial</button>
   </div>
 </template>
 
@@ -72,6 +74,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+.tutorial > button {
+  margin-top: 20px;
 }
 
 .tutorial-card h2 {
@@ -79,7 +86,7 @@ export default {
 }
 
 .tutorial-card p {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .tutorial-card {

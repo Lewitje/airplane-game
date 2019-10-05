@@ -7,10 +7,14 @@
       <div class="store-inner">
         <h3>Store</h3>
         <div>
-          <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 22 }"><eva-icon name="upload-outline"></eva-icon> Build gate ($50,000)</button>
+          <h4>Gate</h4>
+          <p>Gates receive passengers &amp; planes. They require staff.</p>
+          <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 22 || $root.player.cash < 50000 }"><eva-icon name="upload-outline"></eva-icon> Build gate ($50,000)</button>
         </div>
         <div>
-          <button @click="buyRunway" :class="{ disabled: $root.player.runways.length === 6 }"><eva-icon name="arrowhead-up-outline"></eva-icon> Build runway ($100,000)</button>
+          <h4>Runway</h4>
+          <p>Runways allow planes to land and takeoff.</p>
+          <button @click="buyRunway" :class="{ disabled: $root.player.runways.length === 6 || $root.player.cash < 100000 }"><eva-icon name="arrowhead-up-outline"></eva-icon> Build runway ($100,000)</button>
         </div>
       </div>
     </div>

@@ -3,12 +3,12 @@
     <div class="status-bar-wrapper">
       <div class="status-bar">
         <div class="status-bar-item time" title="Airport open/closed">
-          <eva-icon v-if="$root.airport.open" name="sun-outline"></eva-icon>
+          <eva-icon v-if="$root.airport.open" :class="{ spin: $root.config.gameSpeed === 6, sun: $root.config.gameSpeed !== 0 }" name="sun-outline"></eva-icon>
           <eva-icon v-else name="moon-outline"></eva-icon>
-          <span>{{ Math.floor($root.mainTick / 5) }}:00</span>
+          <span>{{ Math.floor($root.mainTick / 10) }}:00</span>
           <div class="time-inner" :style="{ width: getTimeWidth }"></div>
         </div>
-        <div class="status-bar-item clickable" title="Balance" @click="showCashflow = !showCashflow">
+        <div class="status-bar-item clickable" :class="{ warning: $root.player.cash < 10000 }" title="Balance" @click="showCashflow = !showCashflow">
           <eva-icon name="credit-card-outline"></eva-icon> <span>{{ getCash }}</span>
         </div>
         <div class="status-bar-item" title="Waiting to takeoff">
@@ -17,9 +17,9 @@
         <div class="status-bar-item" title="Waiting to land">
           <eva-icon name="diagonal-arrow-right-down-outline"></eva-icon> <span>{{ getLandings }}</span>
         </div>
-        <div class="status-bar-item clickable" :title="`Play speed (${$root.config.gameSpeed}X)`">
-          <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(3)"></eva-icon>
-          <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 3" @click="setGameSpeed(0)"></eva-icon>
+        <div class="status-bar-item clickable" :class="{ paused: $root.config.gameSpeed === 0 }" :title="`Play speed (${$root.config.gameSpeed}X)`">
+          <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(6)"></eva-icon>
+          <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 6" @click="setGameSpeed(0)"></eva-icon>
           <eva-icon name="pause-circle-outline" v-else @click="setGameSpeed(1)"></eva-icon>
         </div>
       </div>
@@ -29,6 +29,24 @@
       <div class="cash-history">
         <div class="history-item" v-for="(item, i) in historyGraph" :style="getHistoryHeight(item)" :key="item * i + i"></div>
       </div>
+      <h3>Flight &amp; passengers</h3>
+      <table>
+        <tr v-for="(value, key) in $root.statistics" v-if="key !== 'cashHistory'">
+          <td>{{ key }}</td>
+          <td>{{ value }}</td>
+        </tr>
+      </table>
+      <h3>Daily costs</h3>
+      <table>
+        <tr>
+          <td>Terminal</td>
+          <td>-7000</td>
+        </tr>
+        <tr>
+          <td>Gates</td>
+          <td>{{ this.$root.player.gates.length * 2000 }}</td>
+        </tr>
+      </table>
     </div>
   </div>
 </template>
@@ -46,7 +64,7 @@ export default {
   },
   computed: {
     getTimeWidth () {
-      return Math.ceil(this.$root.mainTick / 120 * 100) + '%'
+      return Math.ceil(this.$root.mainTick / 240 * 100) + '%'
     },
     planesOnGround () {
       let total = _.filter(this.$root.player.planes, { requestedLanding: false })
@@ -156,6 +174,26 @@ export default {
   background-color: hsl(215deg, 100%, 50%);
 }
 
+.status-bar-item.paused,
+.status-bar-item.paused:hover,
+.status-bar-item.warning,
+.status-bar-item.warning:hover{
+   background-color: hsl(335, 100%, 50%);
+   animation: warning 1s infinite;
+}
+
+@keyframes warning {
+  0%,
+  100% {
+    background-color: hsl(335, 100%, 50%);
+    transform: none;
+  }
+  50% {
+    background-color: hsl(335, 100%, 70%);
+    transform: scale(1.1);
+  }
+}
+
 .status-bar-item span {
   font-size: 16px;
   letter-spacing: -0.05em;
@@ -166,6 +204,12 @@ export default {
   position: relative;
   overflow: hidden;
   z-index: 2;
+}
+
+.airport-closed .time {
+  background-color: black;
+  color: white;
+  fill: white;
 }
 
 .time-inner {
@@ -179,7 +223,24 @@ export default {
 }
 
 .airport-closed .time-inner {
-  background-color: rgb(255, 246, 166);
+  background-color: hsl(280deg, 100%, 40%);
+}
+
+.eva-hover.sun {
+  animation: spin 10s infinite linear;
+}
+
+.eva-hover.spin {
+  animation: spin 1.5s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: none;
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .cashflow {
@@ -201,6 +262,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .history-item {
