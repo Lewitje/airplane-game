@@ -45,17 +45,17 @@ export default {
       if (this.plane.requestedLanding) {
         return '150%'
       } else if (this.plane.takingOff || this.plane.landing) {
-        return 75 + (this.plane.runway * 6) + '%'
-      } else if (this.gate && this.gate.gateNumber > 8) {
-        return 3 + (this.plane.gate - 8) * 8 + '%'
+        return 72 + (this.plane.runway * 4) + '%'
+      } else if (this.gate && this.gate.gateNumber > 11) {
+        return 1 + (this.plane.gate - 11) * 6 + '%'
       } else {
-        return 3 + this.plane.gate * 8 + '%'
+        return 1 + this.plane.gate * 6 + '%'
       }
     },
     planePositionY () {
       if (this.plane.landing || this.plane.takingOff) {
         return '12%'
-      } else if (this.gate && this.gate.gateNumber > 8) {
+      } else if (this.gate && this.gate.gateNumber > 11) {
         return '62%'
       } else {
         return '20%'
@@ -79,7 +79,7 @@ export default {
         return false
       }
       this.readyForTakeoff = false
-      bus.$emit('notification', `Passenger departures terminal costs (${this.plane.passengerCapacity} X 10) +${this.plane.passengerCapacity * 10}`)
+      bus.$emit('notification', `Passenger departures terminal costs (${this.plane.passengerCapacity} X 15) +${this.plane.passengerCapacity * 15}`)
       bus.$emit('request-takeoff', this.plane)
       this.plane.requestedTakeoff = true
     },
@@ -94,7 +94,7 @@ export default {
       }
       // Only board if there are empty spaces
       if (this.plane.boarded < this.plane.passengerCapacity) {
-        this.$root.player.cash += amount * 10
+        this.$root.player.cash += amount * 15
         this.plane.boarded = Math.min(this.plane.passengerCapacity, this.plane.boarded + amount)
       }
     },
@@ -108,25 +108,25 @@ export default {
         amount = x
       }
       if (this.plane.boarded > 0) {
-        this.$root.player.cash += amount * 10
+        this.$root.player.cash += amount * 15
         this.plane.boarded = Math.max(0, this.plane.boarded - amount)
       } else {
-        bus.$emit('notification', `Passenger arrivals terminal costs (${this.plane.passengerCapacity} X 10) +${this.plane.passengerCapacity * 10}`)
+        bus.$emit('notification', `Passenger arrivals terminal costs (${this.plane.passengerCapacity} X 15) +${this.plane.passengerCapacity * 15}`)
         this.plane.unboarding = false
       }
     },
     bump () {
       if (this.plane.unboarding) {
-        this.unboardPassenger(2)
+        this.unboardPassenger(6)
       } else {
-        this.boardPassenger(2)
+        this.boardPassenger(6)
       }
     },
     cheat () {
       if (this.plane.unboarding) {
-        this.unboardPassenger(100)
+        this.unboardPassenger(30)
       } else {
-        this.boardPassenger(100)
+        this.boardPassenger(30)
       }
     }
   },
@@ -191,7 +191,7 @@ export default {
 
 @keyframes plane-landing {
   from {
-    transform: translateY(70vh) scale(1.3);
+    transform: translateY(100vh) scale(1.3);
   }
   to {
     transform: none;
@@ -203,7 +203,7 @@ export default {
     transform: rotate(180deg);
   }
   to {
-    transform: translateY(70vh) scale(1.3) rotate(180deg);
+    transform: translateY(100vh) scale(1.3) rotate(180deg);
   }
 }
 

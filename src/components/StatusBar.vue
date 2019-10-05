@@ -1,35 +1,41 @@
 <template>
-  <div class="status-bar-wrapper">
-    <div class="status-bar">
-      <div class="status-bar-item time" title="Airport open/closed">
-        <eva-icon v-if="$root.airport.open" name="sun-outline"></eva-icon>
-        <eva-icon v-else name="moon-outline"></eva-icon>
-        <span>{{ Math.floor($root.mainTick / 5) }}:00</span>
-        <div class="time-inner" :style="{ width: getTimeWidth }"></div>
+  <div>
+    <div class="status-bar-wrapper">
+      <div class="status-bar">
+        <div class="status-bar-item time" title="Airport open/closed">
+          <eva-icon v-if="$root.airport.open" name="sun-outline"></eva-icon>
+          <eva-icon v-else name="moon-outline"></eva-icon>
+          <span>{{ Math.floor($root.mainTick / 5) }}:00</span>
+          <div class="time-inner" :style="{ width: getTimeWidth }"></div>
+        </div>
+        <div class="status-bar-item" title="Balance">
+          <eva-icon name="credit-card-outline"></eva-icon> <span>{{ getCash }}</span>
+        </div>
+        <div class="status-bar-item" title="Waiting to takeoff">
+          <eva-icon name="diagonal-arrow-right-up-outline"></eva-icon> <span>{{ getTakeoffs }}</span>
+        </div>
+        <div class="status-bar-item" title="Waiting to land">
+          <eva-icon name="diagonal-arrow-right-down-outline"></eva-icon> <span>{{ getLandings }}</span>
+        </div>
+        <div class="status-bar-item clickable" title="Waiting to land" @click="showCashflow = !showCashflow">
+          <eva-icon name="trending-up-outline"></eva-icon>
+        </div>
+        <div class="status-bar-item clickable" title="Waiting to land">
+          <eva-icon name="options-outline"></eva-icon>
+        </div>
+        <div class="status-bar-item clickable" title="Waiting to land">
+          <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(3)"></eva-icon>
+          <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 3" @click="setGameSpeed(0)"></eva-icon>
+          <eva-icon name="pause-circle-outline" v-else @click="setGameSpeed(1)"></eva-icon>
+        </div>
       </div>
-      <div class="status-bar-item" title="Balance">
-        <eva-icon name="credit-card-outline"></eva-icon> <span>{{ getCash }}</span>
+    </div>
+    <div v-if="showCashflow" class="cashflow">
+      <!-- {{ historyGraph }} -->
+
+      <div class="cash-history">
+        <div class="history-item" v-for="(item, i) in historyGraph" :style="getHistoryHeight(item)" :key="item * i + i"></div>
       </div>
-      <div class="status-bar-item" title="Waiting to takeoff">
-        <eva-icon name="diagonal-arrow-right-up-outline"></eva-icon> <span>{{ $root.airport.takeoffQueue.length }}</span>
-      </div>
-      <div class="status-bar-item" title="Waiting to land">
-        <eva-icon name="diagonal-arrow-right-down-outline"></eva-icon> <span>{{ $root.airport.landingQueue.length }}</span>
-      </div>
-      <div class="status-bar-item clickable" title="Waiting to land">
-        <eva-icon name="trending-up-outline"></eva-icon>
-      </div>
-      <div class="status-bar-item clickable" title="Waiting to land">
-        <eva-icon name="options-outline"></eva-icon>
-      </div>
-      <!-- time {{ Math.floor($root.mainTick / 5) }}:00 /
-      cash {{ getCash }} /
-      planes ({{ planesOnGround }}) /
-      scheduled flights ({{ $root.player.scheduled.length }}) /
-      waiting to takeoff {{ $root.airport.takeoffQueue.length }} /
-      waiting to land {{ $root.airport.landingQueue.length }} /
-      landing {{ getLandings }} / taking off {{ getTakeoffs }} /
-      {{ $root.statistics }} -->
     </div>
   </div>
 </template>
@@ -40,6 +46,7 @@ export default {
   name: 'status-bar',
   data () {
     return {
+      showCashflow: true
     }
   },
   mounted () {
@@ -61,7 +68,7 @@ export default {
       return this.$root.player.cash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
     },
     getLandings () {
-      let total = _.filter(this.$root.player.planes, { landing: true })
+      let total = _.filter(this.$root.player.planes, { requestedLanding: true })
       if (total) {
         total = total.length
       } else {
@@ -70,13 +77,36 @@ export default {
       return total
     },
     getTakeoffs () {
-      let total = _.filter(this.$root.player.planes, { takingOff: true })
+      let total = _.filter(this.$root.player.planes, { requestedTakeoff: true })
       if (total) {
         total = total.length
       } else {
         total = 0
       }
       return total
+    },
+    historyGraph () {
+      let a = this.$root.statistics.cashHistory.slice(0, 200)
+      return a.reverse()
+    },
+    getMaxCashflow () {
+      if (this.showCashflow) {
+        return _.max(this.historyGraph)
+      } else {
+        return false
+      }
+    }
+  },
+  methods: {
+    getHistoryHeight (item) {
+      return `height: ${item / this.getMaxCashflow * 100}%`
+    },
+    setGameSpeed (x) {
+      this.$root.pause()
+      this.$root.config.gameSpeed = x
+      if (x !== 0) {
+        this.$root.play()
+      }
     }
   }
 }
@@ -100,6 +130,7 @@ export default {
   background-color: white;
   display: inline-flex;
   justify-content: center;
+  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .2);
 }
 
 .status-bar-item {
@@ -121,6 +152,11 @@ export default {
   fill: white;
   cursor: pointer;
   border: 0;
+}
+
+.status-bar-item .eva-hover {
+  width: 24px;
+  height: 24px;
 }
 
 .status-bar-item.clickable:hover {
@@ -151,5 +187,32 @@ export default {
 
 .airport-closed .time-inner {
   background-color: rgb(255, 246, 166);
+}
+
+.cashflow {
+  position: fixed;
+  bottom: 90px;
+  left: calc(50% - 300px);
+  width: 600px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  z-index: 6;
+}
+
+.cash-history {
+  width: 100%;
+  height: 250px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.history-item {
+  /* margin: 0 1px; */
+  width: 100%;
+  background-color: rgba(0, 0, 0, .2);
+  border-radius: 2px;
 }
 </style>

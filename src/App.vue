@@ -1,9 +1,14 @@
 <template>
   <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
-    {{ $root.player.planes }}
+    <!-- <div v-for="plane in $root.player.planes">
+      {{ plane }}
+    </div> -->
     <main>
       <notifications></notifications>
-      <board>
+      <div class="game-over" v-if="$root.gameOver">
+        <h1>Game Over</h1>
+      </div>
+      <board v-else>
         <plane v-for="plane in $root.player.planes" :key="plane.id" :plane="plane"></plane>
       </board>
       <status-bar />
@@ -102,6 +107,14 @@ button {
   margin-bottom: 10px;
   transition: all .1s;
   outline: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button + button {
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 
 button:hover {
@@ -117,6 +130,12 @@ button:active {
 button.disabled {
   pointer-events: none;
   opacity: .5;
+}
+
+button .eva-hover {
+  width: 24px;
+  height: 24px;
+  margin: 0 3px;
 }
 
 main {
@@ -142,7 +161,7 @@ main {
   border-radius: 50%;
   background-color: white;
   z-index: 9;
-  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .5);
+  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .2);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -150,13 +169,19 @@ main {
   transition: all .1s;
 }
 
+.toggle:hover {
+  background-color: rgb(0, 221, 103);
+  fill: white;
+}
+
 .toggle:active {
   transform: scale(0.9);
 }
 
-.toggle svg {
+.toggle .eva-hover {
   width: 30px;
   height: 30px;
+  margin-top: 4px;
 }
 
 .open .toggle {

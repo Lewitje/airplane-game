@@ -10,7 +10,12 @@
     </div>
   </div>
   <div class="live-feed" v-if="notifications.length">
-    <div v-for="notification in notifications"  class="notification" @click="showMenu = true" :key="notification.id">
+    <div v-for="(notification, i) in notifications"
+    v-show="i < 5"
+    class="notification"
+    @click="showMenu = true"
+    :key="notification.id"
+    :style="{ top: `${i * 15}px`, opacity: 1 - (i * 0.2), 'z-index': 10-i }">
       {{ notification.content }}
     </div>
   </div>
@@ -34,6 +39,17 @@ export default {
   },
   created () {
     bus.$on('notification', (data) => {
+      this.createNotification(data)
+    })
+
+    bus.$on('error', (data) => {
+      this.createNotification(data)
+    })
+  },
+  computed: {
+  },
+  methods: {
+    createNotification (data) {
       let notification = {
         content: data,
         id: Math.random() * Math.random() * 10000 / Math.random() * Math.random()
@@ -45,11 +61,7 @@ export default {
         let i = _.findIndex(this.notifications, { id: notification.id })
         this.$delete(this.notifications, i)
       }, 5000)
-    })
-  },
-  computed: {
-  },
-  methods: {
+    }
   }
 }
 </script>
@@ -69,7 +81,7 @@ export default {
   padding: 15px;
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .5);
+  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .2);
   animation: notifications .5s forwards cubic-bezier(.2, 1.4, .5, 1);
   text-align: left;
 }
@@ -83,14 +95,19 @@ export default {
 }
 
 .notification {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .5);
   cursor: pointer;
   padding: 10px 15px;
   margin-bottom: 10px;
   text-align: left;
   border-radius: 10px;
   animation: notifications .5s forwards cubic-bezier(.2, 1.4, .5, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
 .notifications {
@@ -105,12 +122,10 @@ export default {
 
 @keyframes notifications {
   from {
-    transform: translateY(40px);
-    opacity: 0;
+    transform: translateY(-40px);
   }
   to {
     transform: none;
-    opacity: 1;
   }
 }
 </style>

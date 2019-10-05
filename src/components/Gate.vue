@@ -7,6 +7,9 @@
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers per tick</h4>
         <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 2 }} (${{ (gate.passengersPerTick * 2) * 500 }})</button>
+        <div>
+          <button @click="addPermanentStaff" :class="{ disabled: gate.permanentlyStaffed }">Add 24h Staff (10000)</button>
+        </div>
         <div class="text-faded" @click="showMenu = false">Click to dismiss</div>
       </div>
   </div>
@@ -25,19 +28,22 @@ export default {
       showMenu: false
     }
   },
-  mounted () {
+  created () {
+    bus.$on('staff-all-gates', () => {
+      this.staffGate()
+    })
   },
   computed: {
     getXPosition () {
-      let x = 2 + this.gate.gateNumber * 8 + '%'
-      if (this.gate.gateNumber > 8) {
-        x = 2 + (this.gate.gateNumber - 8) * 8 + '%'
+      let x = this.gate.gateNumber * 6 + '%'
+      if (this.gate.gateNumber > 11) {
+        x = (this.gate.gateNumber - 11) * 6 + '%'
       }
       return x
     },
     getYPosition () {
       let y = '19%'
-      if (this.gate.gateNumber > 8) {
+      if (this.gate.gateNumber > 11) {
         y = '61%'
       }
       return y
@@ -51,10 +57,16 @@ export default {
       bus.$emit('notification', `Upgraded gate -${price}`)
     },
     staffGate () {
-      this.gate.staffed = true
-      let price = this.gate.passengersPerTick * 100
+      if (!this.$root.airport.open || this.gate.staffed) {
+        return false
+      }
+      bus.$emit('staff-gate', this.gate.gateNumber)
+    },
+    addPermanentStaff () {
+      this.gate.permanentlyStaffed = true
+      let price = 10000
       this.$root.player.cash -= price
-      bus.$emit('notification', `Staff costs -${price}`)
+      bus.$emit('notification', `Upgraded gate -${price}`)
     }
   }
 }

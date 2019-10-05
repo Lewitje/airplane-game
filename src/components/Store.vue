@@ -6,8 +6,12 @@
     <div class="store" v-if="showMenu">
       <div class="store-inner">
         <h3>Store</h3>
-        <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 16 }">Build gate ($50,000)</button>
-        <button @click="buyRunway" :class="{ disabled: $root.player.runways.length === 3 }">Build runway ($100,000)</button>
+        <div>
+          <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 22 }"><eva-icon name="upload-outline"></eva-icon> Build gate ($50,000)</button>
+        </div>
+        <div>
+          <button @click="buyRunway" :class="{ disabled: $root.player.runways.length === 6 }"><eva-icon name="arrowhead-up-outline"></eva-icon> Build runway ($100,000)</button>
+        </div>
       </div>
     </div>
   </div>
@@ -49,18 +53,16 @@ export default {
 <style scoped>
 .store {
   position: fixed;
-  bottom: 45px;
-  left: 0;
-  width: 100%;
+  top: 120px;
+  right: 105px;
+  width: 250px;
 }
 
 .store-inner {
-  margin: 0 auto 30px;
-  width: 100%;
-  max-width: 700px;
   background-color: white;
   padding: 15px;
   border-radius: 10px;
+  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .5);
 }
 
 .store-toggle {

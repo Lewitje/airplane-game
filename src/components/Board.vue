@@ -1,12 +1,13 @@
 <template>
   <div class="board">
     <slot></slot>
-    <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 75 + (runway.runwayNumber * 6) + '%' }"></div>
+    <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 72 + (runway.runwayNumber * 4) + '%' }"></div>
     <div class="gates">
       <gate v-for="gate in $root.player.gates" :key="gate.gateNumber"  :gate="gate"></gate>
     </div>
     <div class="terminal">
-      <button @click="dispatchAllPlanes" :class="{ disabled: !$root.airport.open}"><eva-icon name="done-all-outline"></eva-icon></button>
+      <button @click="staffAllGates" :class="{ disabled: !$root.airport.open}"><eva-icon name="people-outline"></eva-icon> Staff all gates</button>
+      <button @click="dispatchAllPlanes" :class="{ disabled: !$root.airport.open}"><eva-icon name="done-all-outline"></eva-icon> Accept all takeoff requests</button>
     </div>
   </div>
 </template>
@@ -27,6 +28,9 @@ export default {
   methods: {
     dispatchAllPlanes () {
       bus.$emit('dispatch-all-planes')
+    },
+    staffAllGates () {
+      bus.$emit('staff-all-gates')
     }
   }
 }
@@ -58,7 +62,7 @@ export default {
 .terminal {
   position: absolute;
   top: 31%;
-  left: 5%;
+  left: 3%;
   width: 70%;
   height: 30%;
   /* background-image: url('/static/img/Terminal.png');
@@ -69,10 +73,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.terminal button {
-  margin: 0;
 }
 
 .airport-closed .terminal {

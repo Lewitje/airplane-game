@@ -18,7 +18,7 @@ const defaultPlane = {
   requestedTakeoff: false,
   takingOff: false,
   landing: false,
-  atGate: true,
+  atGate: false,
   schedule: null,
   passengerCapacity: 200,
   gate: false,
@@ -37,7 +37,8 @@ const defaultSchedule = {
 const defaultGate = {
   gateNumber: 0,
   passengersPerTick: 4,
-  staffed: false
+  staffed: false,
+  permanentlyStaffed: false
 }
 
 const defaultRunway = {
@@ -52,6 +53,8 @@ new Vue({
   template: '<App/>',
   components: { App },
   data: {
+    gameTimer: null,
+    gameOver: false,
     mainTick: 50,
     player: {
       planes: [],
@@ -63,28 +66,28 @@ new Vue({
     airport: {
       open: true,
       takeoffQueue: [],
-      landingQueue: [],
       runwayInUse: false,
       takeoffTimer: false,
       landingTimer: false
     },
     config: {
-      landingTime: 4
+      landingTime: 4,
+      tickSpeed: 1000,
+      gameSpeed: 1
     },
     statistics: {
       totalPlanesArrived: 0,
       totalPlanesDeparted: 0,
       totalPassengersArrived: 0,
-      totalPassengersDeparted: 0
+      totalPassengersDeparted: 0,
+      cashHistory: []
     }
   },
   created () {
-    this.player.cash = 600000
-    this.buyGate()
+    this.player.cash = 16000000
+    // this.buyGate()
 
-    setInterval(() => {
-      this.tick()
-    }, 500)
+    this.play()
 
     bus.$on('buy-plane', this.buyPlane)
     bus.$on('buy-gate', this.buyGate)
@@ -92,11 +95,21 @@ new Vue({
     bus.$on('buy-schedule', this.buySchedule)
     bus.$on('request-takeoff', this.requestTakeoff)
     bus.$on('plane-landed', this.planeLanded)
+    bus.$on('staff-gate', this.staffGate)
   },
   methods: {
+    play () {
+      this.gameTimer = setInterval(() => {
+        this.tick()
+      }, this.config.tickSpeed / this.config.gameSpeed)
+    },
+    pause () {
+      clearInterval(this.gameTimer)
+    },
     tick () {
+      this.statistics.cashHistory.unshift(this.player.cash)
       this.updateDay()
-      // this.checkTakeoffs()
+      this.checkTakeoffs()
       this.checkLandings()
       this.generateRandomLandings()
     },
@@ -115,39 +128,38 @@ new Vue({
         bus.$emit('notification', `Gate costs ${this.player.gates.length} X 2000 (-${gateCost})`)
 
         // Grounded plane costs
-        let groundedPlaneCosts = this.player.planes.length * 5000
+        let groundedPlaneCosts = _.filter(this.player.planes, { atGate: true }).length * 2000
         this.player.cash -= groundedPlaneCosts
-        bus.$emit('notification', `Ground plane fine ${this.player.planes.length} X 5000 (-${groundedPlaneCosts})`)
+        bus.$emit('notification', `Ground plane fine ${this.player.planes.length} X 2000 (-${groundedPlaneCosts})`)
       }
 
       if (this.mainTick === 80) {
         bus.$emit('notification', 'The airport is closing soon, make sure the gates are empty to avoid fines.')
       }
 
-      // if (this.mainTick < 30 || this.mainTick > 100) {
-      //   if (this.airport.open) {
-      //     this.airport.open = false
-      //     bus.$emit('notification', 'The airport has now closed. All remaining passengers will be unboarded, runways are closed. Boardings will resume when the airport opens in the morning.')
-      //   }
-      // } else {
-      //   if (!this.airport.open) {
-      //     this.airport.open = true
-      //     bus.$emit('notification', 'The airport is now open. Boarding will begin shortly.')
-      //   }
-      // }
+      if (this.mainTick < 30 || this.mainTick > 110) {
+        if (this.airport.open) {
+          this.airport.open = false
+          bus.$emit('notification', 'The airport has now closed. All remaining passengers will be unboarded, runways are closed. Boardings will resume when the airport opens in the morning.')
+        }
+      } else {
+        if (!this.airport.open) {
+          this.airport.open = true
+          bus.$emit('notification', 'The airport is now open. Boarding will begin shortly.')
+        }
+      }
     },
     generateRandomLandings () {
       if (!this.airport.open) {
         return false
       }
-      if (Math.random() < 0.9 && this.airport.landingQueue.length < 3) {
+      if (Math.random() < 0.9 && this.getAllPlanesInLandingQueue().length < this.player.gates.length) {
         let plane = _.cloneDeep(defaultPlane)
         plane.landing = false
         plane.requestedLanding = true
         plane.unboarding = true
         plane.boarded = 200
         plane.id = parseInt(Math.random() * 100 * Math.random() / Math.random() * Math.random() * Math.random() * 1000000)
-        this.airport.landingQueue.push(plane.id)
         this.player.planes.push(plane)
       }
     },
@@ -165,16 +177,16 @@ new Vue({
       let x = false
       this.player.runways.forEach((runway) => {
         console.log('checking runway ' + runway.runwayNumber)
-        let plane = _.find(this.player.planes, { runway: runway.runwayNumber, landing: true })
-        if (!plane) {
-          console.log('Runway free ' + runway.runwayNumber, plane)
+        let planes = _.filter(this.player.planes, { runway: runway.runwayNumber })
+        if (!planes.length) {
+          console.log('Runway free ' + runway.runwayNumber, planes)
           x = runway.runwayNumber
         }
       })
       return x
     },
     buyGate () {
-      if (this.player.gates.length >= 16 || this.player.cash < 50000) {
+      if (this.player.gates.length >= 22 || this.player.cash < 50000) {
         return false
       }
       console.log('buying gate')
@@ -185,7 +197,7 @@ new Vue({
       this.player.gates.push(gate)
     },
     buyRunway () {
-      if (this.player.runways.length >= 3 || this.player.cash < 100000) {
+      if (this.player.runways.length >= 6 || this.player.cash < 100000) {
         return false
       }
       console.log('buying runway')
@@ -213,91 +225,103 @@ new Vue({
       this.airport.takeoffQueue.push(plane.id)
     },
     checkTakeoffs () {
-      if (!this.airport.takeoffQueue.length || !this.airport.open) {
+      if (!this.airport.open) {
         return false
       }
 
+      // let queue = this.getAllPlanesInLandingQueue()
+
       if (this.findFreeRunway()) {
-        let plane = _.find(this.player.planes, { id: this.airport.takeoffQueue[0], runway: false })
+        let plane = _.find(this.player.planes, { requestedTakeoff: true })
         if (plane) {
+          this.unstaffGate(plane.gate)
+          plane.requestedTakeoff = false
+          plane.atGate = false
+          plane.gate = false
           plane.runway = this.findFreeRunway()
           plane.takingOff = true
-          this.airport.runwayInUse = true
-          this.airport.takeoffTimer = 1
-        }
-      } else if (this.airport.takeoffTimer) {
-        this.airport.takeoffTimer++
-
-        if (this.airport.takeoffTimer >= this.config.landingTime) {
-          this.airport.takeoffTimer = false
-          this.airport.runwayInUse = false
-          let i = _.findIndex(this.player.planes, { id: this.airport.takeoffQueue[0] })
-          this.$delete(this.player.planes, i)
-          this.airport.takeoffQueue.splice(0, 1)
-          bus.$emit('notification', 'Runway usage (Takeoff) +1000')
-          this.player.cash += 1000
-          this.statistics.totalPlanesDeparted++
-          this.statistics.totalPassengersDeparted += 200
+          // Plane takeoff timer
+          setTimeout(() => {
+            let i = _.findIndex(this.player.planes, { id: plane.id })
+            this.$delete(this.player.planes, i)
+            bus.$emit('notification', 'Runway usage (Takeoff) +1500')
+            this.player.cash += 1500
+            this.statistics.totalPlanesDeparted++
+            this.statistics.totalPassengersDeparted += 200
+          }, 3500)
         }
       }
     },
     checkLandings () {
-      if (!this.airport.landingQueue.length) {
-        return false
-      } else if (!this.airport.open) {
-        this.airport.landingQueue.forEach((item) => {
-          console.log('airport closed queue item ', item)
-          let i = _.findIndex(this.player.planes, { id: item })
-          if (this.player.planes[i].landing) {
-            bus.$emit('notification', 'Landing aborted due to closure, fine of -3000')
-            this.player.cash += 3000
-          }
-          console.log('deleting', i)
+      if (!this.airport.open) {
+        // REMOVE ALL PLANES IN QUEUE WHEN CLOSED
+        let planesToLand = _.filter(this.player.planes, { requestedLanding: true })
+        planesToLand.forEach((plane) => {
+          let i = _.findIndex(this.player.planes, {id: plane.id})
           this.$delete(this.player.planes, i)
         })
-        this.airport.landingQueue = []
+        console.log('Planes trying to land', planesToLand.length)
       } else if (this.findFreeRunway() !== false) {
-        let i = _.findIndex(this.player.planes, { id: this.airport.landingQueue[0], runway: false, landing: false })
-        let plane = this.player.planes[i]
-        if (plane) {
+        let planes = this.getAllPlanesInLandingQueue()
+        if (planes.length) {
+          console.log('Planes waiting to land', planes.length)
+          let plane = _.find(this.player.planes, { id: planes[0].id })
           let gate = this.findFreeGate()
           let runway = this.findFreeRunway()
-          if (plane && gate & runway) {
+          if (plane && !plane.runway && gate && runway) {
+            console.log('free gate + runway for landing', gate, runway, plane)
             plane.gate = gate
             plane.runway = runway
-            plane.landing = true
             plane.requestedLanding = false
+            plane.landing = true
             setTimeout(() => {
               plane.runway = false
               plane.landing = false
-              let x = _.findIndex(this.airport.landingQueue, plane.id)
-              this.$delete(this.airport.landingQueue, x)
-            }, 4000)
+              plane.atGate = true
+              bus.$emit('notification', 'Runway usage (Landing) +1500')
+              this.player.cash += 1500
+              this.statistics.totalPlanesArrived++
+              this.statistics.totalPassengersArrived += 200
+            }, 3500)
           }
         }
-      } else if (this.airport.landingTimer) {
-        // this.airport.landingTimer++
-        // if (this.airport.landingTimer >= this.config.landingTime) {
-        //   this.airport.landingTimer = false
-        //   this.airport.runwayInUse = false
-        //   let plane = _.find(this.player.planes, { id: this.airport.landingQueue[0] })
-        //   plane.landing = false
-        //   this.airport.landingQueue.splice(0, 1)
-        //   bus.$emit('notification', 'Runway usage (Landing) +1000')
-        //   this.player.cash += 1000
-        //   this.statistics.totalPlanesArrived++
-        //   this.statistics.totalPassengersArrived += 200
-        // }
       }
     },
     planeLanded (id) {
-      let i = _.findIndex(this.airport.landingQueue, id)
-      console.log('INDEX!!!', i)
-      this.$delete(this.airport.landingQueue, i)
+      // let i = _.findIndex(this.airport.landingQueue, id)
+      // console.log('INDEX!!!', i)
+      // this.$delete(this.airport.landingQueue, i)
       bus.$emit('notification', 'Runway usage (Landing) +1000')
       this.$root.player.cash += 1000
       this.$root.statistics.totalPlanesArrived++
       this.$root.statistics.totalPassengersArrived += 200
+    },
+    getPlaneInLandingQueue () {
+      return _.find(this.player.planes, { requestedLanding: true, runway: false, landing: false, atGate: false })
+    },
+    getAllPlanesInLandingQueue () {
+      return _.filter(this.player.planes, { requestedLanding: true, runway: false, landing: false, atGate: false })
+    },
+    unstaffGate (x) {
+      let gate = _.find(this.player.gates, {gateNumber: x})
+      if (gate && !gate.permanentlyStaffed) {
+        gate.staffed = false
+      }
+    },
+    staffGate (x) {
+      let gate = _.find(this.player.gates, {gateNumber: x})
+      gate.staffed = true
+      let price = gate.passengersPerTick * 100
+      this.player.cash -= price
+      bus.$emit('notification', `Staff costs -${price}`)
+    }
+  },
+  watch: {
+    'player.cash' () {
+      if (this.player.cash <= 0) {
+        // this.gameOver = true
+        // this.pause()
+      }
     }
   }
 })
