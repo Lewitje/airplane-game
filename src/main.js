@@ -55,7 +55,7 @@ new Vue({
   data: {
     gameTimer: null,
     gameOver: false,
-    mainTick: 220,
+    mainTick: 120,
     player: {
       planes: [],
       gates: [],
@@ -84,7 +84,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 155000 * 1
+    this.player.cash = 155000 * 100
     // this.buyGate()
 
     this.play()

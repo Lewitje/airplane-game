@@ -1,9 +1,10 @@
 <template>
   <div class="plane"
-    :class="{ 'taking-off': plane.takingOff, fuelled: plane.fuelled, landing: plane.landing, unboarding: plane.unboarding }"
+    :class="{ 'bottom-row': isBottomRow, 'taking-off': plane.takingOff, fuelled: plane.fuelled, landing: plane.landing, unboarding: plane.unboarding }"
     :style="{ top: planePositionY, left: planePositionX }"
     @click="bump"
     @click.shift="cheat">
+    <div class="plane-img" :class="{ 'at-gate': plane.atGate }"></div>
 
     <div class="sign error" v-if="!$root.airport.open" title="Plane grounded untill morning">
       <eva-icon name="radio-outline" width="18" height="18"></eva-icon>
@@ -12,7 +13,7 @@
     <div class="sign takeoff" v-else-if="readyForTakeoff" @click="requestTakeoff" :class="{ disabled: !$root.airport.open }"><eva-icon name="checkmark-outline" width="18" height="18"></eva-icon></div>
     <div class="sign info" v-else-if="plane.unboarding"><eva-icon name="trending-down-outline" width="18" height="18"></eva-icon> {{ plane.boarded }}</div>
     <div class="sign waiting" v-else-if="plane.requestedTakeoff"><eva-icon name="clock-outline" width="18" height="18"></eva-icon></div>
-    <div class="sign info" v-else><eva-icon name="trending-up-outline" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
+    <div class="sign info" v-else-if="!plane.takingOff"><eva-icon name="trending-up-outline" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
   </div>
 </template>
 
@@ -28,7 +29,8 @@ export default {
   data () {
     return {
       gate: null,
-      readyForTakeoff: false
+      readyForTakeoff: false,
+      isBottomRow: false
     }
   },
   mounted () {
@@ -135,6 +137,9 @@ export default {
       let x = this.plane.gate
       if (x) {
         this.gate = _.find(this.$root.player.gates, { gateNumber: x })
+        if (this.gate.gateNumber > 11) {
+          this.isBottomRow = true
+        }
       }
     }
   }
@@ -155,10 +160,64 @@ export default {
   font-size: 12px;
   z-index: 3;
   transition: transform 6s cubic-bezier(.2, 1, .4, 0);
+}
+
+.plane-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('/static/img/plane.png');
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
+}
+
+.airport-closed .plane-img {
+  background-image: url('/static/img/plane-white.png');
+}
+
+.plane-img.at-gate {
+  animation: at-gate 2s forwards;
+}
+
+.bottom-row .plane-img.at-gate {
+  animation: at-gate-bottom-row 2s forwards;
+}
+
+.plane.taking-off .plane-img {
+  transform: rotate(180deg);
+}
+
+@keyframes at-gate {
+  0% {
+    transform: translateY(-100%) translateX(100%) rotate(-90deg);
+  }
+  20% {
+    transform: translateY(-100%) rotate(-90deg);
+  }
+  40% {
+    transform: translateY(-100%)  rotate(-180deg);
+  }
+  100% {
+    transform: rotate(-180deg);
+  }
+}
+
+@keyframes at-gate-bottom-row {
+  0% {
+    transform: translateY(100%) translateX(100%) rotate(-90deg);
+  }
+  20% {
+    transform: translateY(100%) rotate(-90deg);
+  }
+  40% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: none;
+  }
 }
 
 .plane:active {
@@ -200,10 +259,10 @@ export default {
 
 @keyframes plane-taking-off {
   from {
-    transform: rotate(180deg);
+    transform: none;
   }
   to {
-    transform: translateY(100vh) scale(1.3) rotate(180deg);
+    transform: translateY(100vh) scale(1.3);
   }
 }
 
@@ -214,7 +273,7 @@ export default {
 
 .sign {
   position: absolute;
-  top: -14px;
+  top: calc(100% - 12px);
   left: calc(50% - 30px);
   width: 60px;
   height: 24px;
@@ -231,6 +290,10 @@ export default {
   align-items: center;
 }
 
+.bottom-row .sign {
+  top: -14px;
+}
+
 .sign.disabled {
   background-color: rgb(167, 167, 167);
   fill: rgb(206, 206, 206);
@@ -243,6 +306,8 @@ export default {
   height: 18px;
 }
 
+.bottom-row .takeoff,
+.bottom-row .waiting,
 .takeoff,
 .waiting {
   background-color: hsl(215deg, 100%, 50%);

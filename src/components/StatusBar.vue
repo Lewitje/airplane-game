@@ -27,7 +27,11 @@
     <div v-if="showCashflow" class="cashflow">
       <h2>Cash flow</h2>
       <div class="cash-history">
-        <div class="history-item" v-for="(item, i) in historyGraph" :style="getHistoryHeight(item)" :key="item * i + i"></div>
+        <div class="history-item"
+              v-for="(item, i) in historyGraph"
+              :style="getHistoryHeight(item)"
+              :key="item * i + i"
+              :title="formatCash(item)"></div>
       </div>
       <h3>Flight &amp; passengers</h3>
       <table>
@@ -76,7 +80,7 @@ export default {
       return total
     },
     getCash () {
-      return this.$root.player.cash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+      return this.formatCash(this.$root.player.cash)
     },
     getLandings () {
       let total = _.filter(this.$root.player.planes, { requestedLanding: true })
@@ -118,6 +122,9 @@ export default {
       if (x !== 0) {
         this.$root.play()
       }
+    },
+    formatCash (n) {
+      return parseFloat(n).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
     }
   }
 }

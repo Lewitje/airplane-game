@@ -10,6 +10,7 @@
       <div class="game-over" v-if="$root.gameOver">
         <h1>Game Over</h1>
         <p>You went bankrupt</p>
+        <button @click="restart">Restart</button>
       </div>
       <board v-else>
         <plane v-for="plane in $root.player.planes" :key="plane.id" :plane="plane"></plane>
@@ -37,6 +38,11 @@ export default {
     Store,
     Notifications,
     Tutorial
+  },
+  methods: {
+    restart () {
+      location.reload()
+    }
   }
 }
 </script>
@@ -162,10 +168,6 @@ main {
   background-color: #161718;
 }
 
-.airport-closed .game-over {
-  color: white;
-}
-
 .toggle {
   position: fixed;
   top: 30px;
@@ -211,7 +213,8 @@ table {
   margin-bottom: 10px;
 }
 
-.screen-too-small {
+.screen-too-small,
+.game-over {
   position: fixed;
   top: 0;
   left: 0;
@@ -223,12 +226,12 @@ table {
   justify-content: center;
   align-items: center;
   padding: 30px;
-  display: none;
+  display: flex;
 }
 
-@media (max-width: 599px) {
+@media (min-width: 600px) {
   .screen-too-small {
-    display: flex;
+    display: none;
   }
 }
 </style>
