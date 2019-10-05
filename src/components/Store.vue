@@ -7,6 +7,7 @@
       <div class="store-inner">
         <h3>Store</h3>
         <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 16 }">Build gate ($50,000)</button>
+        <button @click="buyRunway" :class="{ disabled: $root.player.runways.length === 3 }">Build runway ($100,000)</button>
       </div>
     </div>
   </div>
@@ -36,6 +37,9 @@ export default {
     },
     buyGate () {
       bus.$emit('buy-gate')
+    },
+    buyRunway () {
+      bus.$emit('buy-runway')
     }
   }
 }

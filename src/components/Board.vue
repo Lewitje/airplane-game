@@ -1,26 +1,33 @@
 <template>
   <div class="board">
     <slot></slot>
-    <div class="runway"></div>
+    <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 75 + (runway.runwayNumber * 6) + '%' }"></div>
     <div class="gates">
       <gate v-for="gate in $root.player.gates" :key="gate.gateNumber"  :gate="gate"></gate>
     </div>
-    <div class="terminal"></div>
+    <div class="terminal">
+      <button @click="dispatchAllPlanes" :class="{ disabled: !$root.airport.open}"><eva-icon name="done-all-outline"></eva-icon></button>
+    </div>
   </div>
 </template>
 
 <script>
 import Gate from '@/components/gate'
+import { bus } from '@/main'
 export default {
   name: 'board',
   components: {
-    Gate
+    Gate,
+    bus
   },
   data () {
     return {
     }
   },
-  mounted () {
+  methods: {
+    dispatchAllPlanes () {
+      bus.$emit('dispatch-all-planes')
+    }
   }
 }
 </script>
@@ -30,14 +37,8 @@ export default {
 .board {
   position: relative;
   overflow: hidden;
-  background-color: #d9e4e6;
   width: 100%;
   padding-top: 45%;
-  transition: all 2s;
-}
-
-.airport-closed .board {
-  background-color: #232627;
 }
 
 .runway {
@@ -65,6 +66,13 @@ export default {
   background-color: white;
   box-shadow: 0 0 40px -10px rgba(0, 0, 0, .3);
   transition: all 2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.terminal button {
+  margin: 0;
 }
 
 .airport-closed .terminal {

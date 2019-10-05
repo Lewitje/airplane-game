@@ -1,11 +1,10 @@
 <template>
   <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
+    {{ $root.player.planes }}
     <main>
       <notifications></notifications>
       <board>
-        <div v-for="plane in $root.player.planes" :key="plane.id">
-          <plane :plane="plane"></plane>
-        </div>
+        <plane v-for="plane in $root.player.planes" :key="plane.id" :plane="plane"></plane>
       </board>
       <status-bar />
       <store />
@@ -108,6 +107,7 @@ button {
 button:hover {
   background-color: black;
   color: white;
+  fill: white;
 }
 
 button:active {
@@ -125,7 +125,12 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  background-color: #ecfcff;
+  transition: all 2s;
+}
+
+.airport-closed main {
+  background-color: #161718;
 }
 
 .toggle {

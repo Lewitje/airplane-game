@@ -9,15 +9,17 @@
       {{ item.content }}
     </div>
   </div>
-  <div v-if="notification" class="notification" @click="showMenu = true" :key="notification.id">
-    {{ notification.content }}
+  <div class="live-feed" v-if="notifications.length">
+    <div v-for="notification in notifications"  class="notification" @click="showMenu = true" :key="notification.id">
+      {{ notification.content }}
+    </div>
   </div>
 </div>
 </template>
 
 <script>
 import { bus } from '@/main'
-
+import _ from 'lodash'
 export default {
   name: 'notifications',
   components: {
@@ -26,9 +28,8 @@ export default {
   data () {
     return {
       showMenu: false,
-      notification: null,
-      history: [],
-      timer: null
+      notifications: [],
+      history: []
     }
   },
   created () {
@@ -38,11 +39,12 @@ export default {
         id: Math.random() * Math.random() * 10000 / Math.random() * Math.random()
       }
       this.history.unshift(notification)
-      this.notification = notification
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        this.notification = null
-      }, 4000)
+      this.notifications.unshift(notification)
+      setTimeout(() => {
+        // this.notification = null
+        let i = _.findIndex(this.notifications, { id: notification.id })
+        this.$delete(this.notifications, i)
+      }, 5000)
     })
   },
   computed: {
@@ -58,8 +60,7 @@ export default {
   top: 30px;
 }
 
-.notifications,
-.notification {
+.notifications {
   position: absolute;
   z-index: 10;
   top: 30px;
@@ -73,11 +74,23 @@ export default {
   text-align: left;
 }
 
+.live-feed {
+  position: fixed;
+  top: 30px;
+  right: 105px;
+  width: 250px;
+  z-index: 9;
+}
+
 .notification {
   background-color: black;
   color: white;
   cursor: pointer;
   padding: 10px 15px;
+  margin-bottom: 10px;
+  text-align: left;
+  border-radius: 10px;
+  animation: notifications .5s forwards cubic-bezier(.2, 1.4, .5, 1);
 }
 
 .notifications {

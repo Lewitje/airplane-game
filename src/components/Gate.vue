@@ -1,13 +1,13 @@
 <template>
   <div class="gate"
-      :style="{ left: getXPosition, top: getYPosition }"
-      @click="showMenu = !showMenu">
-      <div class="number">{{ gate.gateNumber }}</div>
+      :style="{ left: getXPosition, top: getYPosition }">
+      <div class="number" @click="showMenu = !showMenu">{{ gate.gateNumber }}</div>
+      <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate"><eva-icon name="people-outline"></eva-icon></div>
       <div class="menu" v-if="showMenu">
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers per tick</h4>
         <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 2 }} (${{ (gate.passengersPerTick * 2) * 500 }})</button>
-        <div class="text-faded">Click to dismiss</div>
+        <div class="text-faded" @click="showMenu = false">Click to dismiss</div>
       </div>
   </div>
 </template>
@@ -49,6 +49,12 @@ export default {
       this.gate.passengersPerTick = this.gate.passengersPerTick * 2
       this.$root.player.cash -= price
       bus.$emit('notification', `Upgraded gate -${price}`)
+    },
+    staffGate () {
+      this.gate.staffed = true
+      let price = this.gate.passengersPerTick * 100
+      this.$root.player.cash -= price
+      bus.$emit('notification', `Staff costs -${price}`)
     }
   }
 }
@@ -62,7 +68,7 @@ export default {
   height: 12%;
   /* background-image: url('/static/img/Gate.png');
   background-size: 100% 100%; */
-  background-color: white;
+  background-color: rgba(150, 150, 150, 0.2);
   transition: all .2s;
   cursor: pointer;
   display: flex;
@@ -72,7 +78,7 @@ export default {
 }
 
 .airport-closed .gate {
-  background-color: rgb(51, 51, 51);
+  /* background-color: rgb(51, 51, 51); */
 }
 
 .number {
@@ -82,12 +88,28 @@ export default {
   transition: all 2s;
 }
 
+.number:hover {
+  transition: all .1s;
+  color: black;
+}
+
 .airport-closed .number {
   color: black;
 }
 
-.gate:hover {
-  background-color: hsl(0deg, 0%, 60%);
+.info {
+  position: absolute;
+  top: calc(50% - 20px);
+  left: calc(50% - 20px);
+  width: 40px;
+  height: 40px;
+  background-color: hsl(215deg, 100%, 50%);
+  fill: white;
+  border-radius: 50%;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .menu {

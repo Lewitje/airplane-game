@@ -1,10 +1,11 @@
 <template>
   <div class="status-bar-wrapper">
     <div class="status-bar">
-      <div class="status-bar-item" title="Airport open/closed">
+      <div class="status-bar-item time" title="Airport open/closed">
         <eva-icon v-if="$root.airport.open" name="sun-outline"></eva-icon>
         <eva-icon v-else name="moon-outline"></eva-icon>
         <span>{{ Math.floor($root.mainTick / 5) }}:00</span>
+        <div class="time-inner" :style="{ width: getTimeWidth }"></div>
       </div>
       <div class="status-bar-item" title="Balance">
         <eva-icon name="credit-card-outline"></eva-icon> <span>{{ getCash }}</span>
@@ -44,6 +45,9 @@ export default {
   mounted () {
   },
   computed: {
+    getTimeWidth () {
+      return Math.ceil(this.$root.mainTick / 120 * 100) + '%'
+    },
     planesOnGround () {
       let total = _.filter(this.$root.player.planes, { requestedLanding: false })
       if (total) {
@@ -127,5 +131,25 @@ export default {
   font-size: 16px;
   letter-spacing: -0.05em;
   padding-left: 3px;
+}
+
+.time {
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.time-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgb(62, 242, 255);
+  z-index: -1;
+  transition: all .5s;
+}
+
+.airport-closed .time-inner {
+  background-color: rgb(255, 246, 166);
 }
 </style>

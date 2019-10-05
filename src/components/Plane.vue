@@ -5,7 +5,11 @@
     @click="bump"
     @click.shift="cheat">
 
-    <div class="sign takeoff" v-if="readyForTakeoff" @click="requestTakeoff" :class="{ disabled: !$root.airport.open }"><eva-icon name="checkmark-outline" width="18" height="18"></eva-icon></div>
+    <div class="sign error" v-if="!$root.airport.open">
+      <eva-icon name="radio-outline" width="18" height="18"></eva-icon>
+      <eva-icon name="alert-triangle-outline" width="18" height="18"></eva-icon>
+    </div>
+    <div class="sign takeoff" v-else-if="readyForTakeoff" @click="requestTakeoff" :class="{ disabled: !$root.airport.open }"><eva-icon name="checkmark-outline" width="18" height="18"></eva-icon></div>
     <div class="sign info" v-else-if="plane.unboarding"><eva-icon name="trending-down-outline" width="18" height="18"></eva-icon> {{ plane.boarded }}</div>
     <div class="sign waiting" v-else-if="plane.requestedTakeoff"><eva-icon name="clock-outline" width="18" height="18"></eva-icon></div>
     <div class="sign info" v-else><eva-icon name="trending-up-outline" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
@@ -32,14 +36,17 @@ export default {
     setInterval(() => {
       this.tick()
     }, 250)
+    bus.$on('dispatch-all-planes', () => {
+      this.requestTakeoff()
+    })
   },
   computed: {
     planePositionX () {
       if (this.plane.requestedLanding) {
         return '150%'
       } else if (this.plane.takingOff || this.plane.landing) {
-        return '82%'
-      } else if (this.gate.gateNumber > 8) {
+        return 75 + (this.plane.runway * 6) + '%'
+      } else if (this.gate && this.gate.gateNumber > 8) {
         return 3 + (this.plane.gate - 8) * 8 + '%'
       } else {
         return 3 + this.plane.gate * 8 + '%'
@@ -48,7 +55,7 @@ export default {
     planePositionY () {
       if (this.plane.landing || this.plane.takingOff) {
         return '12%'
-      } else if (this.gate.gateNumber > 8) {
+      } else if (this.gate && this.gate.gateNumber > 8) {
         return '62%'
       } else {
         return '20%'
@@ -68,6 +75,9 @@ export default {
       }
     },
     requestTakeoff () {
+      if (!this.readyForTakeoff) {
+        return false
+      }
       this.readyForTakeoff = false
       bus.$emit('notification', `Passenger departures terminal costs (${this.plane.passengerCapacity} X 10) +${this.plane.passengerCapacity * 10}`)
       bus.$emit('request-takeoff', this.plane)
@@ -75,7 +85,7 @@ export default {
     },
     boardPassenger (x) {
       // Dont do anything if the plane is moving
-      if (this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
+      if (!this.$root.airport.open || this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
         return false
       }
       let amount = this.gate ? this.gate.passengersPerTick : 1
@@ -249,6 +259,28 @@ export default {
 
 .takeoff:hover {
   background-color: hsl(215deg, 100%, 60%);
+}
+
+.sign.error {
+  background-color: rgb(226, 0, 75);
+}
+
+.sign.error .eva-hover:nth-child(1) {
+  animation: flicker 2s infinite;
+}
+
+.sign.error .eva-hover:nth-child(2) {
+  margin-left: -18px;
+  animation: flicker 2s 1s infinite;
+}
+
+@keyframes flicker {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .plane:active .info {
