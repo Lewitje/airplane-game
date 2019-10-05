@@ -1,6 +1,6 @@
 <template>
   <div :class="{ open: showMenu }">
-    <div class="store-toggle toggle" @click="showMenu = !showMenu">
+    <div class="store-toggle toggle" @click="showMenu = !showMenu" title="Open store">
       <eva-icon name="shopping-cart-outline"></eva-icon>
     </div>
     <div class="store" v-if="showMenu">
@@ -53,7 +53,7 @@ export default {
 <style scoped>
 .store {
   position: fixed;
-  top: 120px;
+  bottom: 30px;
   right: 105px;
   width: 250px;
 }
@@ -66,6 +66,7 @@ export default {
 }
 
 .store-toggle {
-  top: 120px;
+  top: auto;
+  bottom: 30px;
 }
 </style>

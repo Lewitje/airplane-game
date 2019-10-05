@@ -8,7 +8,7 @@
           <span>{{ Math.floor($root.mainTick / 5) }}:00</span>
           <div class="time-inner" :style="{ width: getTimeWidth }"></div>
         </div>
-        <div class="status-bar-item" title="Balance">
+        <div class="status-bar-item clickable" title="Balance" @click="showCashflow = !showCashflow">
           <eva-icon name="credit-card-outline"></eva-icon> <span>{{ getCash }}</span>
         </div>
         <div class="status-bar-item" title="Waiting to takeoff">
@@ -17,13 +17,7 @@
         <div class="status-bar-item" title="Waiting to land">
           <eva-icon name="diagonal-arrow-right-down-outline"></eva-icon> <span>{{ getLandings }}</span>
         </div>
-        <div class="status-bar-item clickable" title="Waiting to land" @click="showCashflow = !showCashflow">
-          <eva-icon name="trending-up-outline"></eva-icon>
-        </div>
-        <div class="status-bar-item clickable" title="Waiting to land">
-          <eva-icon name="options-outline"></eva-icon>
-        </div>
-        <div class="status-bar-item clickable" title="Waiting to land">
+        <div class="status-bar-item clickable" :title="`Play speed (${$root.config.gameSpeed}X)`">
           <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(3)"></eva-icon>
           <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 3" @click="setGameSpeed(0)"></eva-icon>
           <eva-icon name="pause-circle-outline" v-else @click="setGameSpeed(1)"></eva-icon>
@@ -31,8 +25,7 @@
       </div>
     </div>
     <div v-if="showCashflow" class="cashflow">
-      <!-- {{ historyGraph }} -->
-
+      <h2>Cash flow</h2>
       <div class="cash-history">
         <div class="history-item" v-for="(item, i) in historyGraph" :style="getHistoryHeight(item)" :key="item * i + i"></div>
       </div>
@@ -46,7 +39,7 @@ export default {
   name: 'status-bar',
   data () {
     return {
-      showCashflow: true
+      showCashflow: false
     }
   },
   mounted () {
@@ -198,11 +191,12 @@ export default {
   background-color: white;
   border-radius: 10px;
   z-index: 6;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .1);
 }
 
 .cash-history {
   width: 100%;
-  height: 250px;
+  height: 150px;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -210,9 +204,21 @@ export default {
 }
 
 .history-item {
-  /* margin: 0 1px; */
+  margin: 0 0.5px;
   width: 100%;
-  background-color: rgba(0, 0, 0, .2);
+  background-color: hsl(215deg, 100%, 50%);
   border-radius: 2px;
+  animation: history-item .5s forwards;
+}
+
+@keyframes history-item {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 </style>

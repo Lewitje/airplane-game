@@ -5,7 +5,7 @@
     @click="bump"
     @click.shift="cheat">
 
-    <div class="sign error" v-if="!$root.airport.open">
+    <div class="sign error" v-if="!$root.airport.open" title="Plane grounded untill morning">
       <eva-icon name="radio-outline" width="18" height="18"></eva-icon>
       <eva-icon name="alert-triangle-outline" width="18" height="18"></eva-icon>
     </div>

@@ -90,7 +90,7 @@ export default {
 }
 
 .airport-closed .gate {
-  /* background-color: rgb(51, 51, 51); */
+  background-color: black;
 }
 
 .number {
@@ -102,10 +102,6 @@ export default {
 
 .number:hover {
   transition: all .1s;
-  color: black;
-}
-
-.airport-closed .number {
   color: black;
 }
 

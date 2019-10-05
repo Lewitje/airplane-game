@@ -84,7 +84,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 16000000
+    this.player.cash = 160000
     // this.buyGate()
 
     this.play()
@@ -133,7 +133,7 @@ new Vue({
         bus.$emit('notification', `Ground plane fine ${this.player.planes.length} X 2000 (-${groundedPlaneCosts})`)
       }
 
-      if (this.mainTick === 80) {
+      if (this.mainTick === 100) {
         bus.$emit('notification', 'The airport is closing soon, make sure the gates are empty to avoid fines.')
       }
 
@@ -319,8 +319,8 @@ new Vue({
   watch: {
     'player.cash' () {
       if (this.player.cash <= 0) {
-        // this.gameOver = true
-        // this.pause()
+        this.gameOver = true
+        this.pause()
       }
     }
   }

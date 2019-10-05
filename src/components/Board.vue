@@ -1,7 +1,7 @@
 <template>
   <div class="board">
     <slot></slot>
-    <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 72 + (runway.runwayNumber * 4) + '%' }"></div>
+    <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 72 + (runway.runwayNumber * 4) + '%' }">{{ runway.runwayNumber }}</div>
     <div class="gates">
       <gate v-for="gate in $root.player.gates" :key="gate.gateNumber"  :gate="gate"></gate>
     </div>
@@ -51,8 +51,12 @@ export default {
   left: 82%;
   width: 3%;
   height: 80%;
-  background-color: rgb(168, 168, 168);
-  transition: all 2s;
+  background-color: rgba(150, 150, 150, 0.2);
+  transition: background 2s;
+  font-size: 30px;
+  color: rgba(150, 150, 150, .3);
+  font-weight: 700;
+  line-height: 35vw;
 }
 
 .airport-closed .runway {

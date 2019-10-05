@@ -1,8 +1,6 @@
 <template>
   <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
-    <!-- <div v-for="plane in $root.player.planes">
-      {{ plane }}
-    </div> -->
+    <tutorial></tutorial>
     <main>
       <notifications></notifications>
       <div class="game-over" v-if="$root.gameOver">
@@ -23,6 +21,7 @@ import Plane from './components/plane'
 import StatusBar from './components/statusBar'
 import Store from './components/store'
 import Notifications from './components/notifications'
+import Tutorial from './components/tutorial'
 
 export default {
   name: 'app',
@@ -31,7 +30,8 @@ export default {
     Plane,
     StatusBar,
     Store,
-    Notifications
+    Notifications,
+    Tutorial
   }
 }
 </script>
@@ -144,7 +144,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ecfcff;
+  background-color: hsl(215deg, 50%, 97%);
   transition: all 2s;
 }
 

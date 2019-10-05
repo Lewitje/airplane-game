@@ -1,6 +1,6 @@
 <template>
 <div :class="{ open: showMenu }">
-  <div class="notifications-toggle toggle" @click="showMenu = !showMenu">
+  <div class="notifications-toggle toggle" @click="showMenu = !showMenu" title="History">
     <eva-icon name="bell-outline"></eva-icon>
   </div>
   <div class="notifications" v-if="showMenu">

@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "name": "airplane-game",
+    "alias": "airport.lewi.co",
+    "builds": [
+        { "src": "dist/**", "use": "@now/static" }
+    ],
+    "routes": [
+        { "src": "^/static/js/(.*)", "dest": "/dist/static/js/$1" },
+        { "src": "^/static/css/(.*)", "dest": "/dist/static/css/$1" },
+        { "src": "^/static/img/(.*)", "dest": "/dist/static/img/$1" },
+        { "src": "^/static/video/(.*)", "dest": "/dist/static/video/$1" },
+        { "src": ".*", "dest": "dist/index.html" }
+    ]
+}
