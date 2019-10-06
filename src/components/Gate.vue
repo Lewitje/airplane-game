@@ -16,7 +16,8 @@
         <div class="text-faded" @click="showMenu = false">Close</div>
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers boarded / unboarded per tick</h4>
-        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 1.2 }} (${{ (gate.passengersPerTick * 1.2) * 500 }})</button>
+        <p class="error" v-show="$root.statistics.totalPlanesDeparted < gate.passengersPerTick">You need to dispatch a minimum of {{ gate.passengersPerTick }} planes to unlock this.</p>
+        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ Math.ceil(gate.passengersPerTick * 1.2) }} (${{ (Math.ceil(gate.passengersPerTick * 1.2)) * 500 }})</button>
         <div>
           <h4>Permanently staff gate</h4>
           <p>Each time a plane takesoff staff are automatically requested for the next flight.</p>
@@ -69,8 +70,8 @@ export default {
   },
   methods: {
     upgrade () {
-      let price = (this.gate.passengersPerTick * 1.2) * 500
-      this.gate.passengersPerTick = this.gate.passengersPerTick * 1.2
+      let price = Math.ceil(this.gate.passengersPerTick * 1.2) * 500
+      this.gate.passengersPerTick = Math.ceil(this.gate.passengersPerTick * 1.2)
       this.$root.player.cash -= price
       bus.$emit('notification', `Upgraded gate -${price}`)
     },
@@ -223,7 +224,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 90;
-  background-color: rgba(0, 0, 0, .2);
+  backdrop-filter: blur(5px) brightness(.8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -236,7 +237,6 @@ export default {
   border-radius: 10px;
   z-index: 20;
   background-color: white;
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .4);
   animation: menu .5s forwards cubic-bezier(.2, 1.5, .5, 1);
   opacity: 0;
   overflow-y: auto;
@@ -271,7 +271,7 @@ export default {
 .staff:after {
   position: absolute;
   width: 15%;
-  height: 30%;
+  height: 45%;
   content: '';
   background-color: hsl(45deg, 100%, 50%);
   border-radius: 2px;
@@ -286,6 +286,7 @@ export default {
 .staff:before {
   bottom: 10px;
   left: 5px;
+  height: 30%;
   background-color: white;
   transform: translateY(3vh);
 }
@@ -299,11 +300,13 @@ export default {
 .gate-staffed .staff:before {
   opacity: 1;
   animation: truck-before 3s linear forwards;
+  animation-delay: inherit;
 }
 
 .gate-staffed .staff:after {
   opacity: 1;
   animation: truck-after 6s linear forwards;
+  animation-delay: inherit;
 }
 
 @keyframes truck-before {
@@ -323,7 +326,7 @@ export default {
     transform: translateY(8vh);
   }
   50% {
-    transform: translateY(1vh);
+    transform: translateY(2vh);
   }
   100% {
     transform: rotate(-40deg);

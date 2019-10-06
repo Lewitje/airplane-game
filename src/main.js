@@ -85,7 +85,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 155000 * 10
+    this.player.cash = 310050 * 1
     this.buyGate()
     // this.buyGate()
     this.buyRunway()
@@ -201,12 +201,12 @@ new Vue({
       this.player.gates.push(gate)
     },
     buyRunway () {
-      if (this.player.runways.length >= 5 || this.player.cash < 100000) {
+      if (this.player.runways.length >= 5 || this.player.cash < 250000) {
         return false
       }
       console.log('buying runway')
-      this.player.cash -= 100000
-      bus.$emit('important', 'Purchased runway -100000')
+      this.player.cash -= 250000
+      bus.$emit('important', 'Purchased runway -250000')
       let runway = _.cloneDeep(defaultRunway)
       runway.runwayNumber = this.player.runways.length + 1
       this.player.runways.push(runway)

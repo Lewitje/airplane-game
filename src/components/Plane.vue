@@ -62,9 +62,9 @@ export default {
       if (this.plane.landing || this.plane.takingOff) {
         return '11%'
       } else if (this.gate && this.gate.gateNumber > 8) {
-        return '60%'
+        return '62%'
       } else {
-        return '18%'
+        return '17%'
       }
     }
   },
@@ -88,7 +88,7 @@ export default {
         return false
       }
       this.readyForTakeoff = false
-      bus.$emit('notification', `Passenger departures terminal costs (${this.plane.passengerCapacity} X 15) +${this.plane.passengerCapacity * 15}`)
+      bus.$emit('notification', `Passenger departures terminal costs (${this.plane.passengerCapacity} X 10) +${this.plane.passengerCapacity * 10}`)
       bus.$emit('request-takeoff', this.plane)
       this.plane.requestedTakeoff = true
     },
@@ -103,7 +103,7 @@ export default {
       }
       // Only board if there are empty spaces
       if (this.plane.boarded < this.plane.passengerCapacity) {
-        this.$root.player.cash += amount * 15
+        this.$root.player.cash += amount * 10
         this.plane.boarded = Math.min(this.plane.passengerCapacity, this.plane.boarded + amount)
       }
     },
@@ -117,10 +117,10 @@ export default {
         amount = x
       }
       if (this.plane.boarded > 0) {
-        this.$root.player.cash += amount * 15
+        this.$root.player.cash += amount * 10
         this.plane.boarded = Math.max(0, this.plane.boarded - amount)
       } else {
-        bus.$emit('notification', `Passenger arrivals terminal costs (${this.plane.passengerCapacity} X 15) +${this.plane.passengerCapacity * 15}`)
+        bus.$emit('notification', `Passenger arrivals terminal costs (${this.plane.passengerCapacity} X 10) +${this.plane.passengerCapacity * 10}`)
         this.plane.unboarding = false
       }
     },

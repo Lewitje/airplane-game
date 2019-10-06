@@ -122,12 +122,15 @@ export default {
 
 .notification-history {
   padding: 8px 10px;
-  border-top: 1px solid rgba(0, 0, 0, .2);
+  background-color: rgba(0, 0, 0, .05);
+  border-radius: 4px;
+  margin-top: 5px;
+
 }
 
 .notification-history.error {
-  color: hsl(215, 100%, 50%);
-  font-weight: 700;
+  background-color: hsl(215, 100%, 50%);
+  color: white;
 }
 
 @keyframes notifications {

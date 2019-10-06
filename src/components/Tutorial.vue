@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      visible: false,
+      visible: true,
       step: 1
     }
   },
@@ -70,7 +70,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 20;
-  background-color: rgba(0, 0, 0, .2);
+  backdrop-filter: blur(5px) brightness(.8);
   display: flex;
   justify-content: center;
   align-items: center;

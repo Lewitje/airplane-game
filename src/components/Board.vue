@@ -256,9 +256,9 @@ export default {
   height: 3vw;
   border-radius: 50%;
   /* box-shadow: 0 0 20px -5px rgba(0, 0, 0, .1); */
-  background-color: rgba(0, 150, 0, .2);
+  background-color: rgba(0, 150, 0, .05);
   position: absolute;
-  top: -10%;
+  top: -3%;
   left: 20%;
 }
 
@@ -267,18 +267,18 @@ export default {
   width: 4vw;
   height: 4vw;
   content: '';
-  background-color: rgba(100, 220, 200, .4);
+  background-color: rgba(100, 220, 200, .2);
 }
 
 .forest:before {
-  left: 8vw;
-  top: -3vw;
-  background-color: rgba(100, 220, 160, .3);
+  left: 12vw;
+  top: -5vw;
+  background-color: rgba(100, 220, 160, .1);
 }
 
 .forest:after {
-  left: -9vw;
-  top: -2vw;
+  left: -13vw;
+  top: -1vw;
 }
 
 .forest:nth-child(2) {

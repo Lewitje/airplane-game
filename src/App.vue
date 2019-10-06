@@ -1,8 +1,10 @@
 <template>
   <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
     <div class="screen-too-small">
-      <h1>Rotate your phone</h1>
-      <p>A screen with a minimum width of 600px is required to play this game.</p>
+      <img src="/static/img/plane.png" alt="" class="logo">
+      <h1>Airport</h1>
+      <p>A game where you manage an airport.</p>
+      <p class="text-faded">Rotate your phone to continue.</p>
     </div>
     <tutorial></tutorial>
     <main>
@@ -110,6 +112,10 @@ h4 {
 
 .text-faded {
   opacity: 0.33;
+}
+
+.error {
+  color: hsl(340deg, 100%, 50%);
 }
 
 button {
@@ -236,6 +242,22 @@ table {
   align-items: center;
   padding: 30px;
   display: flex;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 40px;
+  animation: logo 1s infinite alternate cubic-bezier(.6, 0, .4, 1);
+}
+
+@keyframes logo {
+  from {
+    transform: rotate(35deg);
+  }
+  to {
+    transform: rotate(55deg);
+  }
 }
 
 .row {
