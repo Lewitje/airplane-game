@@ -158,7 +158,7 @@ export default {
   cursor: pointer;
   transition: transform .2s;
   font-size: 12px;
-  z-index: 3;
+  z-index: 5;
   transition: transform 6s cubic-bezier(.2, 1, .4, 0);
 }
 
@@ -224,28 +224,12 @@ export default {
   transform: scale(.9);
 }
 
-.plane.waiting .info {
-  background-color: orangered;
-}
-
 .plane.taking-off {
   animation: plane-taking-off 3s forwards cubic-bezier(.6, 0, .8, 0);
 }
 
-.plane.taking-off .info {
-  background-color: green;
-}
-
 .plane.landing {
   animation: plane-landing 3s forwards cubic-bezier(.2, 1, .4, 1);
-}
-
-.plane.landing .info {
-  background-color: darkblue;
-}
-
-.plane.unboarding .info {
-  background-color: rgb(238, 68, 82);
 }
 
 @keyframes plane-landing {
@@ -273,12 +257,13 @@ export default {
 
 .sign {
   position: absolute;
-  top: calc(100% - 12px);
+  top: calc(100% + 4px);
   left: calc(50% - 30px);
   width: 60px;
   height: 24px;
   line-height: 24px;
-  background-color: rgb(0, 214, 107);
+  background-color: black;
+  color: white;
   border-radius: 30px;
   transition: all .25s;
   z-index: 3;
@@ -291,7 +276,7 @@ export default {
 }
 
 .bottom-row .sign {
-  top: -14px;
+  top: -25px;
 }
 
 .sign.disabled {
@@ -330,6 +315,10 @@ export default {
   background-color: rgb(226, 0, 75);
 }
 
+.plane.unboarding .info {
+  background-color: black;
+}
+
 .sign.error .eva-hover:nth-child(1) {
   animation: flicker 2s infinite;
 }
@@ -350,8 +339,8 @@ export default {
 
 .plane:active .info {
   transition: none;
-  background-color: white;
-  color: black;
-  fill: black;
+  background-color: rgb(100, 100, 100);
+  color: white;
+  fill: white;
 }
 </style>

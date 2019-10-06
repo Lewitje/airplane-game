@@ -109,8 +109,8 @@ new Vue({
     tick () {
       this.statistics.cashHistory.unshift(this.player.cash)
       this.updateDay()
-      this.checkTakeoffs()
       this.checkLandings()
+      this.checkTakeoffs()
       this.generateRandomLandings()
     },
     updateDay () {

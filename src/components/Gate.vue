@@ -1,6 +1,8 @@
 <template>
   <div class="gate"
-      :style="{ left: getXPosition, top: getYPosition }">
+      :style="{ left: getXPosition, top: getYPosition }"
+      :class="{ 'gate-staffed': gate.staffed }">
+      <div class="walkway"></div>
       <div class="number" @click="showMenu = !showMenu">{{ gate.gateNumber }}</div>
       <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate" title="Needs staff!"><eva-icon name="people-outline"></eva-icon></div>
       <div class="menu" v-if="showMenu">
@@ -87,6 +89,23 @@ export default {
   justify-content: center;
   align-items: center;
   transition: all 2s;
+}
+
+.walkway {
+  position: absolute;
+  bottom: -5px;
+  right: 5px;
+  height: 20px;
+  width: 5px;
+  background-color: rgb(150, 150, 150);
+  z-index: 3;
+  transition: all 3s;
+  transform-origin: 50% 80%;
+  transform: rotate(20deg);
+}
+
+.gate-staffed .walkway {
+  transform: rotate(-30deg);
 }
 
 .airport-closed .gate {
