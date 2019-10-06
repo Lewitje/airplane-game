@@ -1,6 +1,7 @@
 <template>
   <div class="tutorial" v-if="visible">
     <div class="tutorial-card" v-if="step === 1">
+      <img src="/static/img/plane.png" alt="" class="logo">
       <h2>Welcome to Airport</h2>
       <p>Buy gates &amp; runways, manage planes, stay out of debt.</p>
       <button @click="step = 2">Next - Expanding your airport</button>
@@ -70,7 +71,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 20;
-  backdrop-filter: blur(5px) brightness(.8);
+  backdrop-filter: blur(3px) brightness(.8);
   display: flex;
   justify-content: center;
   align-items: center;

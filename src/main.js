@@ -85,7 +85,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 310050 * 1
+    this.player.cash = 310050 * 100
     this.buyGate()
     // this.buyGate()
     this.buyRunway()
@@ -329,6 +329,25 @@ new Vue({
 
       if (this.player.cash < 10000 && from > 10000) {
         bus.$emit('important', 'Your cash is getting low!')
+      }
+    },
+    'statistics.totalPlanesDeparted' () {
+      let prize = 10000
+      if (this.statistics.totalPlanesDeparted === 5) {
+        bus.$emit('achievement', `5 planes departed (+${prize})!`)
+        this.player.cash += prize
+      } else if (this.statistics.totalPlanesDeparted === 50) {
+        bus.$emit('achievement', `50 planes departed (+${prize})!`)
+        this.player.cash += prize
+      } else if (this.statistics.totalPlanesDeparted === 500) {
+        bus.$emit('achievement', `500 planes departed (+${prize})!`)
+        this.player.cash += prize
+      } else if (this.statistics.totalPlanesDeparted === 500) {
+        bus.$emit('achievement', `500 planes departed (+${prize})!`)
+        this.player.cash += prize
+      } else if (this.statistics.totalPlanesDeparted === 1000) {
+        bus.$emit('achievement', `1000 planes departed (+${prize})!`)
+        this.player.cash += prize
       }
     }
   }

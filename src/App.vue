@@ -245,9 +245,9 @@ table {
 }
 
 .logo {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 40px;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 20px;
   animation: logo 1s infinite alternate cubic-bezier(.6, 0, .4, 1);
 }
 

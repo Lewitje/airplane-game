@@ -38,7 +38,7 @@ export default {
     this.plane.fuelled = true
     this.timer = setInterval(() => {
       this.tick()
-    }, 250)
+    }, 1000)
     bus.$on('dispatch-all-planes', () => {
       this.requestTakeoff()
     })

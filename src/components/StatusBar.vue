@@ -288,17 +288,5 @@ export default {
   width: 100%;
   background-color: hsl(215deg, 100%, 50%);
   border-radius: 2px;
-  animation: history-item .5s forwards;
-}
-
-@keyframes history-item {
-  from {
-    opacity: 0;
-    transform: translateX(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 </style>

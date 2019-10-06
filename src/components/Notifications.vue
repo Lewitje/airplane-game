@@ -9,7 +9,13 @@
       {{ item.content }}
     </div>
   </div>
-  <div class="live-feed" v-if="notifications.length">
+  <div class="live-feed" v-if="notifications.length || showAchievement">
+    <div v-for="item in achievements" :key="item.content" class="achievement" v-if="!item.seen">
+      <eva-icon name="star" :width="100" :height="100"></eva-icon>
+      <h2>{{ item.content }}</h2>
+      <button @click="item.seen = true">Dismiss</button>
+    </div>
+
     <div v-for="(notification, i) in notifications"
     v-if="notification.type === 'IMPORTANT'"
     class="notification"
@@ -33,8 +39,10 @@ export default {
   data () {
     return {
       showMenu: false,
+      showAchievement: false,
       notifications: [],
-      history: []
+      history: [],
+      achievements: []
     }
   },
   created () {
@@ -44,6 +52,10 @@ export default {
 
     bus.$on('important', (data) => {
       this.createNotification(data, 'IMPORTANT')
+    })
+
+    bus.$on('achievement', (data) => {
+      this.createAchievement(data)
     })
   },
   computed: {
@@ -62,6 +74,14 @@ export default {
         let i = _.findIndex(this.notifications, { id: notification.id })
         this.$delete(this.notifications, i)
       }, 5000)
+    },
+    createAchievement (data) {
+      let achievement = {
+        content: data,
+        seen: false
+      }
+      this.achievements.push(achievement)
+      this.showAchievement = true
     }
   }
 }
@@ -103,10 +123,6 @@ export default {
   margin-bottom: 10px;
   text-align: left;
   border-radius: 10px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
 }
 
 .notification.error {
@@ -131,6 +147,32 @@ export default {
 .notification-history.error {
   background-color: hsl(215, 100%, 50%);
   color: white;
+}
+
+.achievement {
+  background-color: white;
+  padding: 20px 10px;
+  background-color: white;
+  color: black;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, .2);
+  border-radius: 4px;
+  fill: hsl(40deg, 100%, 50%);
+  margin-bottom: 20px;
+}
+
+.achievement .eva-hover {
+  display: block;
+  margin: 0 auto 20px;
+  animation: achievement .5s infinite alternate-reverse cubic-bezier(.6, 0, .4, 1);
+}
+
+@keyframes achievement {
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(10deg);
+  }
 }
 
 @keyframes notifications {

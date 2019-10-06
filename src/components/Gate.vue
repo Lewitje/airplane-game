@@ -224,7 +224,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 90;
-  backdrop-filter: blur(5px) brightness(.8);
+  backdrop-filter: blur(3px) brightness(.8);
   display: flex;
   justify-content: center;
   align-items: center;
