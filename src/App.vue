@@ -60,9 +60,11 @@ export default {
 body {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  background-color: #f3f6fb;
   text-align: center;
   font-size: 14px;
   line-height: 1.2;
+  transition: background 2s;
 }
 
 body,
@@ -167,12 +169,12 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: hsl(215deg, 50%, 97%);
-  transition: all 2s;
+  /* background-color: #f3f6fb;
+  transition: all 2s; */
 }
 
 .airport-closed main {
-  background-color: #161718;
+  /* background-color: #161718; */
 }
 
 .toggle {

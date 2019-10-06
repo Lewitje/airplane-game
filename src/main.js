@@ -56,7 +56,7 @@ new Vue({
   data: {
     gameTimer: null,
     gameOver: false,
-    mainTick: 120,
+    mainTick: 120 + 100,
     player: {
       planes: [],
       gates: [],
@@ -85,7 +85,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 155000 * 1
+    this.player.cash = 155000 * 10
     this.buyGate()
     // this.buyGate()
     this.buyRunway()
@@ -142,11 +142,13 @@ new Vue({
       if (this.mainTick <= 60 || this.mainTick >= 220) {
         if (this.airport.open) {
           this.airport.open = false
+          document.body.style.background = '#161718'
           bus.$emit('notification', 'The airport has now closed. All remaining passengers will be unboarded, runways are closed. Boardings will resume when the airport opens in the morning.')
         }
       } else {
         if (!this.airport.open) {
           this.airport.open = true
+          document.body.style.background = '#f3f6fb'
           bus.$emit('notification', 'The airport is now open. Boarding will begin shortly.')
         }
       }
