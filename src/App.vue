@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
     <div class="screen-too-small">
-      <h1>Small screen</h1>
+      <h1>Rotate your phone</h1>
       <p>A screen with a minimum width of 600px is required to play this game.</p>
     </div>
     <tutorial></tutorial>
@@ -164,8 +164,8 @@ main {
   top: 0;
   left: 0;
   overflow: hidden;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

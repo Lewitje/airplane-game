@@ -50,7 +50,7 @@ export default {
   },
   data () {
     return {
-      visible: false,
+      visible: true,
       step: 1
     }
   },

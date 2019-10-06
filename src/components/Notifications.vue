@@ -14,7 +14,6 @@
     v-show="i < 5"
     class="notification"
     :class="{ error: notification.type === 'ERROR' }"
-    @click="showMenu = true"
     :key="notification.id"
     :style="{ top: `${i * 5}px`, opacity: 1 - (i * 0.2), 'z-index': 10-i }">
       {{ notification.content }}
@@ -92,7 +91,7 @@ export default {
   top: 15px;
   right: 90px;
   width: 250px;
-  z-index: 9;
+  z-index: 19;
 }
 
 .notification {
