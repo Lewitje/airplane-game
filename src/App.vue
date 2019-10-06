@@ -58,6 +58,8 @@ export default {
 }
 
 body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
   text-align: center;
   font-size: 14px;
   line-height: 1.2;
