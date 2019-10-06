@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name": "airplane-game",
+    "name": "Airplane",
     "alias": "airport.lewi.co",
     "builds": [
         { "src": "dist/**", "use": "@now/static" }

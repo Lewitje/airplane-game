@@ -1,4 +1,4 @@
-# airplane-game
+# Airplane
 
 > A Vue.js project
 
