@@ -1,11 +1,18 @@
 <template>
-  <div class="gate"
-      :style="{ left: getXPosition, top: getYPosition }"
-      :class="{ 'gate-staffed': gate.staffed }">
-      <div class="walkway"></div>
-      <div class="number" @click="showMenu = !showMenu">{{ gate.gateNumber }}</div>
-      <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate" title="Needs staff!"><eva-icon name="people-outline"></eva-icon></div>
-      <div class="menu" v-if="showMenu">
+  <div>
+    <div class="gate"
+        :style="{ left: getXPosition, top: getYPosition }"
+        :class="{ 'gate-staffed': gate.staffed, 'gate-bottom': gate.gateNumber > 11 }">
+        <div class="menu-toggle" title="Upgrade stand" @click="showMenu = !showMenu">
+          <eva-icon name="arrowhead-up-outline" width="18" height="18"></eva-icon>
+        </div>
+        <div class="walkway" :style="`transition-delay: ${gate.gateNumber * 0.1}s;`"></div>
+        <div class="number">{{ gate.gateNumber }}</div>
+        <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate" title="Needs staff!"><eva-icon name="people-outline"></eva-icon></div>
+    </div>
+    <div class="menu" v-if="showMenu">
+      <div class="menu-inner">
+        <div class="text-faded" @click="showMenu = false">Close</div>
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers boarded / unboarded per tick</h4>
         <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 2 }} (${{ (gate.passengersPerTick * 2) * 500 }})</button>
@@ -21,6 +28,7 @@
         </div>
         <div class="text-faded" @click="showMenu = false">Close</div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -72,6 +80,7 @@ export default {
       bus.$emit('staff-gate', this.gate.gateNumber)
     },
     addPermanentStaff () {
+      this.gate.staffed = true
       this.gate.permanentlyStaffed = true
       let price = 10000
       this.$root.player.cash -= price
@@ -96,8 +105,7 @@ export default {
   /* background-image: url('/static/img/Gate.png');
   background-size: 100% 100%; */
   background-color: rgba(150, 150, 150, 0.2);
-  transition: all .2s;
-  cursor: pointer;
+  transition: all 2s;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -107,14 +115,24 @@ export default {
 .walkway {
   position: absolute;
   bottom: -5px;
-  right: 5px;
-  height: 20px;
-  width: 5px;
+  right: 3px;
+  height: 40%;
+  width: 15%;
   background-color: rgb(150, 150, 150);
   z-index: 3;
-  transition: all 3s;
+  transition: all 2.5s;
   transform-origin: 50% 80%;
   transform: rotate(20deg);
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+}
+
+.gate-bottom .walkway {
+  top: -5px;
+  bottom: auto;
+  left: 3px;
+  right: auto;
+  transform-origin: 50% 20%;
 }
 
 .gate-staffed .walkway {
@@ -126,15 +144,14 @@ export default {
 }
 
 .number {
-  color: rgb(190, 190, 190);
-  font-size: 30px;
+  color: rgba(190, 190, 190, .5);
+  font-size: 2.5vw;
   font-weight: 700;
   transition: all 2s;
 }
 
-.number:hover {
-  transition: all .1s;
-  color: black;
+.airport-closed .number {
+  opacity: .33;
 }
 
 .info {
@@ -151,6 +168,7 @@ export default {
   justify-content: center;
   align-items: center;
   animation: info 1s infinite;
+  cursor: pointer;
 }
 
 @keyframes info {
@@ -166,22 +184,64 @@ export default {
   }
 }
 
-.menu {
+.menu-toggle {
   position: absolute;
-  top: -100px;
-  left: calc(50% - 150px);
-  width: 300px;
-  padding: 30px 15px;
+  top: -15px;
+  left: -10px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid black;
+  z-index: 11;
+  cursor: pointer;
+}
+
+.gate-bottom .menu-toggle {
+  top: auto;
+  bottom: -15px;
+}
+
+.menu-toggle:hover {
+  background-color: black;
+  fill: white;
+}
+
+.menu-toggle .eva-hover {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 90;
+  background-color: rgba(0, 0, 0, .2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-inner {
+  width: 350px;
+  max-height: 80vh;
+  padding: 10px 15px;
   border-radius: 10px;
-  z-index: 5;
+  z-index: 20;
   background-color: white;
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .4);
   animation: menu .5s forwards cubic-bezier(.2, 1.5, .5, 1);
   opacity: 0;
+  overflow-y: auto;
 }
 
 .menu .text-faded {
-  padding: 20px 20px 10px;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 
 @keyframes menu {

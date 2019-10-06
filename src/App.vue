@@ -158,7 +158,11 @@ button .eva-hover {
 }
 
 main {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -179,7 +183,7 @@ main {
   height: 60px;
   border-radius: 50%;
   background-color: white;
-  z-index: 9;
+  z-index: 20;
   box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .2);
   cursor: pointer;
   display: flex;

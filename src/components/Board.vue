@@ -40,7 +40,6 @@ export default {
 <style scoped>
 .board {
   position: relative;
-  overflow: hidden;
   width: 100%;
   padding-top: 45%;
 }

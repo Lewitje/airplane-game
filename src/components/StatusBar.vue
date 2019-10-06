@@ -17,7 +17,7 @@
         <div class="status-bar-item" title="Waiting to land">
           <eva-icon name="diagonal-arrow-right-down-outline"></eva-icon> <span>{{ getLandings }}</span>
         </div>
-        <div class="status-bar-item clickable" :class="{ paused: $root.config.gameSpeed === 0 }" :title="`Play speed (${$root.config.gameSpeed}X)`">
+        <div class="status-bar-item clickable" :class="{ paused: $root.config.gameSpeed === 0 }" :title="`Normal / Fast / Pause`">
           <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(6)"></eva-icon>
           <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 6" @click="setGameSpeed(0)"></eva-icon>
           <eva-icon name="pause-circle-outline" v-else @click="setGameSpeed(1)"></eva-icon>
@@ -144,6 +144,7 @@ export default {
   bottom: 0;
   width: 100%;
   padding: 0 15px 15px;
+  z-index: 15;
 }
 .status-bar {
   margin: 0 auto;
@@ -258,16 +259,16 @@ export default {
 
 .cashflow {
   position: fixed;
-  bottom: 90px;
+  bottom: 75px;
   left: calc(50% - 300px);
   width: 600px;
   padding: 30px;
   background-color: white;
   border-radius: 10px;
-  z-index: 6;
+  z-index: 18;
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .1);
   max-height: 70vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .cash-history {

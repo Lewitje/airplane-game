@@ -76,7 +76,7 @@ export default {
 
 .notifications {
   position: absolute;
-  z-index: 10;
+  z-index: 20;
   top: 15px;
   right: 90px;
   width: 250px;

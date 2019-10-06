@@ -60,7 +60,7 @@ export default {
   bottom: 15px;
   right: 90px;
   width: 250px;
-  z-index: 10;
+  z-index: 30;
 }
 
 .store-inner {

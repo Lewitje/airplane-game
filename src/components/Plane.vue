@@ -268,7 +268,7 @@ export default {
   background-color: black;
   color: white;
   border-radius: 30px;
-  transition: all .25s;
+  transition: top .25s, background .1s;
   z-index: 3;
   font-size: 12px;
   letter-spacing: -0.05em;
@@ -298,12 +298,16 @@ export default {
 .bottom-row .waiting,
 .takeoff,
 .waiting {
-  /* background-color: hsl(215deg, 100%, 50%); */
   color: white;
   top: calc(50% - 12px);
   width: 60px;
   left: calc(50% - 30px);
   opacity: 1;
+}
+
+.bottom-row .takeoff,
+.takeoff {
+  background-color: hsl(215deg, 100%, 50%);
 }
 
 .waiting {
@@ -342,7 +346,7 @@ export default {
 
 .plane:active .info {
   transition: none;
-  background-color: rgb(100, 100, 100);
+  background-color: hsl(215deg, 100%, 60%);
   color: white;
   fill: white;
 }

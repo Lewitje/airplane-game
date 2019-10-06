@@ -86,8 +86,19 @@ new Vue({
   },
   created () {
     this.player.cash = 155000 * 100
-    // this.buyGate()
-
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
+    this.buyGate()
     this.play()
 
     bus.$on('buy-plane', this.buyPlane)
