@@ -2,7 +2,7 @@
   <div>
     <div class="gate"
         :style="{ left: getXPosition, top: getYPosition }"
-        :class="{ 'gate-staffed': gate.staffed && $root.airport.open, 'gate-bottom': gate.gateNumber > 11 }">
+        :class="{ 'gate-staffed': gate.staffed && $root.airport.open, 'gate-bottom': gate.gateNumber > 8 }">
         <div class="menu-toggle" title="Upgrade stand" @click="showMenu = !showMenu">
           <eva-icon name="arrowhead-up-outline" width="18" height="18"></eva-icon>
         </div>
@@ -16,7 +16,7 @@
         <div class="text-faded" @click="showMenu = false">Close</div>
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers boarded / unboarded per tick</h4>
-        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 2 }} (${{ (gate.passengersPerTick * 2) * 500 }})</button>
+        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 1.2 }} (${{ (gate.passengersPerTick * 1.2) * 500 }})</button>
         <div>
           <h4>Permanently staff gate</h4>
           <p>Each time a plane takesoff staff are automatically requested for the next flight.</p>
@@ -53,15 +53,15 @@ export default {
   },
   computed: {
     getXPosition () {
-      let x = this.gate.gateNumber * 6 + '%'
-      if (this.gate.gateNumber > 11) {
-        x = (this.gate.gateNumber - 11) * 6 + '%'
+      let x = this.gate.gateNumber * 8 + '%'
+      if (this.gate.gateNumber > 8) {
+        x = (this.gate.gateNumber - 8) * 8 + '%'
       }
       return x
     },
     getYPosition () {
-      let y = '19%'
-      if (this.gate.gateNumber > 11) {
+      let y = '16%'
+      if (this.gate.gateNumber > 8) {
         y = '61%'
       }
       return y
@@ -69,8 +69,8 @@ export default {
   },
   methods: {
     upgrade () {
-      let price = (this.gate.passengersPerTick * 2) * 500
-      this.gate.passengersPerTick = this.gate.passengersPerTick * 2
+      let price = (this.gate.passengersPerTick * 1.2) * 500
+      this.gate.passengersPerTick = this.gate.passengersPerTick * 1.2
       this.$root.player.cash -= price
       bus.$emit('notification', `Upgraded gate -${price}`)
     },
@@ -101,8 +101,8 @@ export default {
 <style scoped>
 .gate {
   position: absolute;
-  width: 5%;
-  height: 12%;
+  width: 7%;
+  height: 15%;
   /* background-image: url('/static/img/Gate.png');
   background-size: 100% 100%; */
   background-color: rgba(150, 150, 150, 0.2);

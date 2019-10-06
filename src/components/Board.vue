@@ -1,5 +1,5 @@
 <template>
-  <div class="board">
+  <div class="board" :class="{ paused: $root.config.gameSpeed === 0, fast: $root.config.gameSpeed === 6 }">
     <slot></slot>
     <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 72 + (runway.runwayNumber * 4) + '%' }">{{ runway.runwayNumber }}</div>
     <div class="gates">
@@ -8,6 +8,8 @@
     <div class="terminal">
       <button @click="staffAllGates" :class="{ disabled: !$root.airport.open}"><eva-icon name="people-outline"></eva-icon> Staff all gates</button>
       <button @click="dispatchAllPlanes" :class="{ disabled: !$root.airport.open}"><eva-icon name="done-all-outline"></eva-icon> Accept all takeoff requests</button>
+      <div class="fan left"></div>
+      <div class="fan right"></div>
     </div>
   </div>
 </template>
@@ -58,15 +60,53 @@ export default {
   line-height: 35vw;
 }
 
+.runway:before,
+.runway:after {
+  position: absolute;
+  bottom: -1.5vw;
+  left: 10%;
+  width: .8vw;
+  height: .8vw;
+  border-radius: 50%;
+  content: '';
+  background-color: rgba(0, 0, 0, .3);
+}
+
+.runway:after {
+  left: auto;
+  right: 10%;
+}
+
 .airport-closed .runway {
   background-color: black;
+}
+
+.airport-closed .runway:before,
+.airport-closed .runway:after {
+  animation: runway-lights 1s infinite;
+}
+
+.airport-closed .runway:after {
+  animation-delay: .5s;
+}
+
+@keyframes runway-lights {
+  0%,
+  10%,
+  100% {
+    background-color: hsl(160deg, 100%, 50%);
+  }
+  50%,
+  60% {
+    background-color: hsl(20deg, 100%, 50%);
+  }
 }
 
 .terminal {
   position: absolute;
   top: 31%;
-  left: 3%;
-  width: 70%;
+  left: 0;
+  width: 73%;
   height: 30%;
   /* background-image: url('/static/img/Terminal.png');
   background-size: 100% 100%; */
@@ -79,7 +119,98 @@ export default {
   z-index: 4;
 }
 
-.airport-closed .terminal {
+.terminal button {
+  position: relative;
+  z-index: 5;
+}
+
+.terminal:before,
+.terminal:after {
+  position: absolute;
+  width: 25vw;
+  height: 8vw;
+  background-color: white;
+  content: '';
+  top: calc(50% - 4vw);
+  border-radius: 5vw;
+  box-shadow: 0 0 40px -10px rgba(0, 0, 0, .3);
+}
+
+.terminal:before {
+  left: 5%;
+}
+
+.terminal:after {
+  right: 5%;
+}
+
+.fan {
+  position: absolute;
+  top: calc(50% - 2vw);
+  z-index: 4;
+  width: 4vw;
+  height: 4vw;
+  border-radius: 50%;
+  background-color: rgba(50, 50, 50, .6);
+  border: .2vw solid rgba(255, 255, 255, .4);
+}
+
+.fan:before,
+.fan:after {
+  position: absolute;
+  top: calc(50% - .2vw);
+  left: calc(50% - 1.5vw);
+  width: 3vw;
+  height: .4vw;
+  content: '';
+  background-color: rgba(0, 0, 0, .7);
+  animation: fan 1s infinite linear;
+  border-radius: 1vw;
+}
+
+.fan:after {
+  animation: fan-after 1s infinite linear;
+}
+
+.paused .fan:before,
+.paused .fan:after {
+  animation-play-state: paused;
+}
+
+.fast .fan:before,
+.fast .fan:after {
+  animation-duration: .5s;
+}
+
+@keyframes fan {
+  from {
+    transform: none;
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fan-after {
+  from {
+    transform: rotate(90deg);
+  }
+  to {
+    transform: rotate(450deg);
+  }
+}
+
+.fan.left {
+  left: 8%;
+}
+
+.fan.right {
+  right: 8%;
+}
+
+.airport-closed .terminal,
+.airport-closed .terminal:before,
+.airport-closed .terminal:after {
   box-shadow: 0 0 40px -10px rgba(255, 187, 0, 0.479);
   background-color: black;
 }

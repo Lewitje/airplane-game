@@ -85,7 +85,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 155000 * 2
+    this.player.cash = 155000 * 20
     this.buyGate()
     // this.buyGate()
     this.buyRunway()
@@ -190,7 +190,7 @@ new Vue({
       return x
     },
     buyGate () {
-      if (this.player.gates.length >= 22 || this.player.cash < 50000) {
+      if (this.player.gates.length >= 16 || this.player.cash < 50000) {
         return false
       }
       console.log('buying gate')

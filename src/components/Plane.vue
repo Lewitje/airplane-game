@@ -30,43 +30,47 @@ export default {
     return {
       gate: null,
       readyForTakeoff: false,
-      isBottomRow: false
+      isBottomRow: false,
+      timer: null
     }
   },
   mounted () {
     this.plane.fuelled = true
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.tick()
     }, 250)
     bus.$on('dispatch-all-planes', () => {
       this.requestTakeoff()
     })
   },
+  beforeDestroy () {
+    clearInterval(this.timer)
+  },
   computed: {
     planePositionX () {
       if (this.plane.requestedLanding) {
         return '150%'
       } else if (this.plane.takingOff || this.plane.landing) {
-        return 72 + (this.plane.runway * 4) + '%'
-      } else if (this.gate && this.gate.gateNumber > 11) {
-        return 1 + (this.plane.gate - 11) * 6 + '%'
+        return 71 + (this.plane.runway * 4) + '%'
+      } else if (this.gate && this.gate.gateNumber > 8) {
+        return 1 + (this.plane.gate - 8) * 8 + '%'
       } else {
-        return 1 + this.plane.gate * 6 + '%'
+        return 1 + this.plane.gate * 8 + '%'
       }
     },
     planePositionY () {
       if (this.plane.landing || this.plane.takingOff) {
         return '12%'
-      } else if (this.gate && this.gate.gateNumber > 11) {
-        return '62%'
+      } else if (this.gate && this.gate.gateNumber > 8) {
+        return '60%'
       } else {
-        return '20%'
+        return '18%'
       }
     }
   },
   methods: {
     tick () {
-      if (this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
+      if (this.$root.config.gameSpeed === 0 || this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
         return false
       } else if (this.plane.unboarding) {
         this.unboardPassenger()
@@ -90,7 +94,7 @@ export default {
     },
     boardPassenger (x) {
       // Dont do anything if the plane is moving
-      if (!this.$root.airport.open || this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
+      if (this.$root.config.gameSpeed === 0 || !this.$root.airport.open || this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
         return false
       }
       let amount = this.gate ? this.gate.passengersPerTick : 1
@@ -105,7 +109,7 @@ export default {
     },
     unboardPassenger (x) {
       // Dont do anything if the plane is moving
-      if (this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
+      if (this.$root.config.gameSpeed === 0 || this.plane.takingOff || this.plane.requestedTakeoff || this.plane.landing || this.plane.requestedLanding || this.readyForTakeoff) {
         return false
       }
       let amount = this.gate ? this.gate.passengersPerTick : 1
@@ -154,8 +158,8 @@ export default {
 .plane {
   position: absolute;
   /* background-color: red; */
-  width: 3%;
-  height: 10%;
+  width: 5%;
+  height: 13%;
   /* border: 2px solid red; */
   color: white;
   cursor: pointer;
@@ -178,7 +182,7 @@ export default {
 }
 
 .airport-closed .plane-img {
-  background-image: url('/static/img/plane-white.png');
+  background-image: url('/static/img/plane-grey.png');
 }
 
 .plane-img.at-gate {
