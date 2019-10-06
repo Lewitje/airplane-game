@@ -16,7 +16,7 @@
     :class="{ error: notification.type === 'ERROR' }"
     @click="showMenu = true"
     :key="notification.id"
-    :style="{ top: `${i * 15}px`, opacity: 1 - (i * 0.2), 'z-index': 10-i }">
+    :style="{ top: `${i * 5}px`, opacity: 1 - (i * 0.2), 'z-index': 10-i }">
       {{ notification.content }}
     </div>
   </div>
@@ -90,13 +90,13 @@ export default {
 .live-feed {
   position: fixed;
   top: 15px;
-  right: 105px;
+  right: 90px;
   width: 250px;
   z-index: 9;
 }
 
 .notification {
-  background-color: hsl(215deg, 30%, 90%);
+  background-color: hsl(215deg, 30%, 85%);
   color: black;
   /* box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .5); */
   cursor: pointer;

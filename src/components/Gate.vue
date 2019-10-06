@@ -2,11 +2,12 @@
   <div>
     <div class="gate"
         :style="{ left: getXPosition, top: getYPosition }"
-        :class="{ 'gate-staffed': gate.staffed, 'gate-bottom': gate.gateNumber > 11 }">
+        :class="{ 'gate-staffed': gate.staffed && $root.airport.open, 'gate-bottom': gate.gateNumber > 11 }">
         <div class="menu-toggle" title="Upgrade stand" @click="showMenu = !showMenu">
           <eva-icon name="arrowhead-up-outline" width="18" height="18"></eva-icon>
         </div>
-        <div class="walkway" :style="`transition-delay: ${gate.gateNumber * 0.1}s;`"></div>
+        <div class="staff" :style="`animation-delay: ${3 * Math.random()}s;`"></div>
+        <div class="walkway" :style="`transition-delay: ${2 * Math.random()}s;`"></div>
         <div class="number">{{ gate.gateNumber }}</div>
         <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate" title="Needs staff!"><eva-icon name="people-outline"></eva-icon></div>
     </div>
@@ -112,13 +113,15 @@ export default {
   transition: all 2s;
 }
 
+/* WALKWAY */
+
 .walkway {
   position: absolute;
   bottom: -5px;
   right: 3px;
   height: 40%;
   width: 15%;
-  background-color: rgb(150, 150, 150);
+  background-color: rgb(100, 100, 100);
   z-index: 3;
   transition: all 2.5s;
   transform-origin: 50% 80%;
@@ -252,6 +255,81 @@ export default {
   to {
     transform: none;
     opacity: 1;
+  }
+}
+
+/* STAFF */
+.staff {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.staff:before,
+.staff:after {
+  position: absolute;
+  width: 15%;
+  height: 30%;
+  content: '';
+  background-color: hsl(45deg, 100%, 50%);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gate-bottom .staff {
+  transform: rotate(180deg);
+}
+
+.staff:before {
+  bottom: 10px;
+  left: 5px;
+  background-color: white;
+  transform: translateY(3vh);
+}
+
+.staff:after {
+  top: -5px;
+  right: 5px;
+  transform: translateY(8vh);
+}
+
+.gate-staffed .staff:before {
+  opacity: 1;
+  animation: truck-before 2s forwards linear;
+  animation-delay: inherit;
+}
+
+.gate-staffed .staff:after {
+  opacity: 1;
+  animation: truck-after 5s forwards linear;
+  animation-delay: inherit;
+}
+
+@keyframes truck-before {
+  0% {
+    transform: translateY(3vh);
+  }
+  50% {
+    transform: translateY(1vh);
+  }
+  100% {
+    transform: rotate(20deg);
+  }
+}
+
+@keyframes truck-after {
+  0% {
+    transform: translateY(8vh);
+  }
+  50% {
+    transform: translateY(1vh);
+  }
+  100% {
+    transform: rotate(-40deg);
   }
 }
 </style>
