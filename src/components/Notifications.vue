@@ -71,26 +71,25 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .notifications-toggle {
-  top: 30px;
+  top: 15px;
 }
 
 .notifications {
   position: absolute;
   z-index: 10;
-  top: 30px;
-  right: 105px;
+  top: 15px;
+  right: 90px;
   width: 250px;
   padding: 15px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .2);
-  animation: notifications .5s forwards cubic-bezier(.2, 1.4, .5, 1);
   text-align: left;
 }
 
 .live-feed {
   position: fixed;
-  top: 30px;
+  top: 15px;
   right: 105px;
   width: 250px;
   z-index: 9;
@@ -105,7 +104,6 @@ export default {
   margin-bottom: 10px;
   text-align: left;
   border-radius: 10px;
-  animation: notifications .5s forwards cubic-bezier(.2, 1.4, .5, 1);
   position: absolute;
   top: 0;
   left: 0;
@@ -119,6 +117,7 @@ export default {
 
 .notifications {
   height: 350px;
+  max-height: 70vh;
   overflow-y: auto;
 }
 

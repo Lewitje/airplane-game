@@ -7,12 +7,19 @@
       <div v-if="!gate.staffed && $root.airport.open" class="info" @click="staffGate" title="Needs staff!"><eva-icon name="people-outline"></eva-icon></div>
       <div class="menu" v-if="showMenu">
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
-        <h4>Passengers per tick</h4>
+        <h4>Passengers boarded / unboarded per tick</h4>
         <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ gate.passengersPerTick * 2 }} (${{ (gate.passengersPerTick * 2) * 500 }})</button>
         <div>
-          <button @click="addPermanentStaff" :class="{ disabled: gate.permanentlyStaffed }">Add 24h Staff (10000)</button>
+          <h4>Permanently staff gate</h4>
+          <p>Each time a plane takesoff staff are automatically requested for the next flight.</p>
+          <button @click="addPermanentStaff" :class="{ disabled: gate.permanentlyStaffed }">Add permanent staff (10000)</button>
         </div>
-        <div class="text-faded" @click="showMenu = false">Click to dismiss</div>
+        <div>
+          <h4>Auto approve takeoff</h4>
+          <p>When the plane is fully boarded the plane will automatically request takeoff.</p>
+          <button @click="autoApproveTakeoff" :class="{ disabled: gate.autoApproveTakeoff }">Auto approve takeoff (10000)</button>
+        </div>
+        <div class="text-faded" @click="showMenu = false">Close</div>
       </div>
   </div>
 </template>
@@ -66,6 +73,12 @@ export default {
     },
     addPermanentStaff () {
       this.gate.permanentlyStaffed = true
+      let price = 10000
+      this.$root.player.cash -= price
+      bus.$emit('notification', `Upgraded gate -${price}`)
+    },
+    autoApproveTakeoff () {
+      this.gate.autoApproveTakeoff = true
       let price = 10000
       this.$root.player.cash -= price
       bus.$emit('notification', `Upgraded gate -${price}`)
@@ -156,8 +169,8 @@ export default {
 .menu {
   position: absolute;
   top: -100px;
-  left: calc(50% - 100px);
-  width: 200px;
+  left: calc(50% - 150px);
+  width: 300px;
   padding: 30px 15px;
   border-radius: 10px;
   z-index: 5;
@@ -165,6 +178,10 @@ export default {
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .4);
   animation: menu .5s forwards cubic-bezier(.2, 1.5, .5, 1);
   opacity: 0;
+}
+
+.menu .text-faded {
+  padding: 20px 20px 10px;
 }
 
 @keyframes menu {

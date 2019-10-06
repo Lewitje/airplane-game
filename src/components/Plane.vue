@@ -10,10 +10,10 @@
       <eva-icon name="radio-outline" width="18" height="18"></eva-icon>
       <eva-icon name="alert-triangle-outline" width="18" height="18"></eva-icon>
     </div>
-    <div class="sign takeoff" v-else-if="readyForTakeoff" @click="requestTakeoff" :class="{ disabled: !$root.airport.open }"><eva-icon name="checkmark-outline" width="18" height="18"></eva-icon></div>
-    <div class="sign info" v-else-if="plane.unboarding"><eva-icon name="trending-down-outline" width="18" height="18"></eva-icon> {{ plane.boarded }}</div>
-    <div class="sign waiting" v-else-if="plane.requestedTakeoff"><eva-icon name="clock-outline" width="18" height="18"></eva-icon></div>
-    <div class="sign info" v-else-if="!plane.takingOff"><eva-icon name="trending-up-outline" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
+    <div class="sign takeoff" v-else-if="readyForTakeoff" @click="requestTakeoff" :class="{ disabled: !$root.airport.open }" title="Ready for takeoff"><eva-icon name="checkmark-outline" width="18" height="18"></eva-icon></div>
+    <div class="sign info" v-else-if="plane.unboarding" title="Passengers unboarding"><eva-icon name="trending-down-outline" width="18" height="18"></eva-icon> {{ plane.boarded }}</div>
+    <div class="sign waiting" v-else-if="plane.requestedTakeoff" title="Waiting for takeoff slot"><eva-icon name="clock-outline" width="18" height="18"></eva-icon></div>
+    <div class="sign info" v-else-if="!plane.takingOff" title="Passengers boarding"><eva-icon name="trending-up-outline" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
   </div>
 </template>
 
@@ -72,6 +72,9 @@ export default {
         this.unboardPassenger()
       } else if (this.plane.fuelled && this.plane.boarded >= this.plane.passengerCapacity) {
         this.readyForTakeoff = true
+        if (this.gate && this.gate.autoApproveTakeoff) {
+          this.requestTakeoff()
+        }
       } else {
         this.boardPassenger()
       }
@@ -295,7 +298,7 @@ export default {
 .bottom-row .waiting,
 .takeoff,
 .waiting {
-  background-color: hsl(215deg, 100%, 50%);
+  /* background-color: hsl(215deg, 100%, 50%); */
   color: white;
   top: calc(50% - 12px);
   width: 60px;

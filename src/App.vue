@@ -60,6 +60,7 @@ export default {
 body {
   text-align: center;
   font-size: 14px;
+  line-height: 1.2;
 }
 
 body,
@@ -170,8 +171,8 @@ main {
 
 .toggle {
   position: fixed;
-  top: 30px;
-  right: 30px;
+  top: 15px;
+  right: 15px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -227,6 +228,15 @@ table {
   align-items: center;
   padding: 30px;
   display: flex;
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  padding: 0 10px;
+  flex: 1 1 auto;
 }
 
 @media (min-width: 600px) {

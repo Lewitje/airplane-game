@@ -33,24 +33,30 @@
               :key="item * i + i"
               :title="formatCash(item)"></div>
       </div>
-      <h3>Flight &amp; passengers</h3>
-      <table>
-        <tr v-for="(value, key) in $root.statistics" v-if="key !== 'cashHistory'">
-          <td>{{ key }}</td>
-          <td>{{ value }}</td>
-        </tr>
-      </table>
-      <h3>Daily costs</h3>
-      <table>
-        <tr>
-          <td>Terminal</td>
-          <td>-7000</td>
-        </tr>
-        <tr>
-          <td>Gates</td>
-          <td>{{ this.$root.player.gates.length * 2000 }}</td>
-        </tr>
-      </table>
+      <div class="row">
+        <div class="col">
+          <h3>Flight &amp; passengers</h3>
+          <table>
+            <tr v-for="(value, key) in $root.statistics" v-if="key !== 'cashHistory'">
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col">
+          <h3>Daily costs</h3>
+          <table>
+            <tr>
+              <td>Terminal</td>
+              <td>-7000</td>
+            </tr>
+            <tr>
+              <td>Gates</td>
+              <td>{{ this.$root.player.gates.length * 2000 }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -260,11 +266,13 @@ export default {
   border-radius: 10px;
   z-index: 6;
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .1);
+  max-height: 70vh;
+  overflow-y: scroll;
 }
 
 .cash-history {
   width: 100%;
-  height: 150px;
+  height: 100px;
   position: relative;
   display: flex;
   justify-content: space-between;

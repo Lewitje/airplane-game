@@ -57,9 +57,10 @@ export default {
 <style scoped>
 .store {
   position: fixed;
-  bottom: 30px;
-  right: 105px;
+  bottom: 15px;
+  right: 90px;
   width: 250px;
+  z-index: 10;
 }
 
 .store-inner {
@@ -71,6 +72,6 @@ export default {
 
 .store-toggle {
   top: auto;
-  bottom: 30px;
+  bottom: 15px;
 }
 </style>

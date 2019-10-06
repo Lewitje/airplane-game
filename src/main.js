@@ -38,7 +38,8 @@ const defaultGate = {
   gateNumber: 0,
   passengersPerTick: 4,
   staffed: false,
-  permanentlyStaffed: false
+  permanentlyStaffed: false,
+  autoApproveTakeoff: false
 }
 
 const defaultRunway = {
