@@ -6,6 +6,7 @@
         { "src": "dist/**", "use": "@now/static" }
     ],
     "routes": [
+        { "src": "^/static/(.*)", "dest": "/dist/static/$1" },
         { "src": "^/static/js/(.*)", "dest": "/dist/static/js/$1" },
         { "src": "^/static/css/(.*)", "dest": "/dist/static/css/$1" },
         { "src": "^/static/img/(.*)", "dest": "/dist/static/img/$1" },
