@@ -5,15 +5,15 @@
   </div>
   <div class="notifications" v-if="showMenu">
     <h3>History</h3>
-    <div class="notification-history" v-for="(item, i) in history" :key="i" :class="{ error: item.type === 'ERROR' }">
+    <div class="notification-history" v-for="(item, i) in history" :key="i" :class="{ error: item.type === 'IMPORTANT' }">
       {{ item.content }}
     </div>
   </div>
   <div class="live-feed" v-if="notifications.length">
     <div v-for="(notification, i) in notifications"
-    v-show="i < 5"
+    v-if="notification.type === 'IMPORTANT'"
     class="notification"
-    :class="{ error: notification.type === 'ERROR' }"
+    :class="{ error: notification.type === 'IMPORTANT' }"
     :key="notification.id"
     :style="{ top: `${i * 5}px`, opacity: 1 - (i * 0.2), 'z-index': 10-i }">
       {{ notification.content }}
@@ -42,8 +42,8 @@ export default {
       this.createNotification(data, 'NORMAL')
     })
 
-    bus.$on('error', (data) => {
-      this.createNotification(data, 'ERROR')
+    bus.$on('important', (data) => {
+      this.createNotification(data, 'IMPORTANT')
     })
   },
   computed: {
@@ -110,7 +110,7 @@ export default {
 }
 
 .notification.error {
-  background-color: hsl(335, 100%, 50%);
+  background-color: hsl(215, 100%, 50%);
   color: white;
 }
 
@@ -126,7 +126,7 @@ export default {
 }
 
 .notification-history.error {
-  color: hsl(335, 100%, 50%);
+  color: hsl(215, 100%, 50%);
   font-weight: 700;
 }
 

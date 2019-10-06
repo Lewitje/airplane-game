@@ -14,7 +14,7 @@
         <div>
           <h4>Runway</h4>
           <p>Runways allow planes to land and takeoff.</p>
-          <button @click="buyRunway" :class="{ disabled: $root.player.runways.length === 6 || $root.player.cash < 100000 }"><eva-icon name="arrowhead-up-outline"></eva-icon> Build runway ($100,000)</button>
+          <button @click="buyRunway" :class="{ disabled: $root.player.runways.length === 5 || $root.player.cash < 100000 }"><eva-icon name="arrowhead-up-outline"></eva-icon> Build runway ($100,000)</button>
         </div>
       </div>
     </div>

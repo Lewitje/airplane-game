@@ -1,7 +1,7 @@
 <template>
   <div class="board" :class="{ paused: $root.config.gameSpeed === 0, fast: $root.config.gameSpeed === 6 }">
     <slot></slot>
-    <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 72 + (runway.runwayNumber * 4) + '%' }">{{ runway.runwayNumber }}</div>
+    <div class="runway" v-for="runway in $root.player.runways" :key="runway.runwayNumber" :style="{ left: 74 + (runway.runwayNumber * 4) + '%' }">{{ runway.runwayNumber }}</div>
     <div class="gates">
       <gate v-for="gate in $root.player.gates" :key="gate.gateNumber"  :gate="gate"></gate>
     </div>
@@ -10,6 +10,15 @@
       <button @click="dispatchAllPlanes" :class="{ disabled: !$root.airport.open}"><eva-icon name="done-all-outline"></eva-icon> Accept all takeoff requests</button>
       <div class="fan left"></div>
       <div class="fan right"></div>
+    </div>
+    <div class="taxiways"></div>
+    <div class="road"></div>
+
+    <div class="forests">
+      <div class="forest"></div>
+      <div class="forest"></div>
+      <div class="forest"></div>
+      <div class="forest"></div>
     </div>
   </div>
 </template>
@@ -48,10 +57,10 @@ export default {
 
 .runway {
   position: absolute;
-  top: 10%;
+  top: 8%;
   left: 82%;
   width: 3%;
-  height: 80%;
+  height: 76%;
   background-color: rgba(150, 150, 150, 0.2);
   transition: background 2s;
   font-size: 30px;
@@ -102,11 +111,36 @@ export default {
   }
 }
 
+.road {
+  position: absolute;
+  top: 16%;
+  left: 74%;
+  width: 3%;
+  height: 60%;
+  background-color: rgba(0, 0, 0, .03);
+  content: '';
+}
+
+.taxiways:before,
+.taxiways:after {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  width: 77%;
+  height: 8%;
+  background-color: rgba(0, 0, 0, .03);
+  content: '';
+}
+
+.taxiways:after {
+  top: 76%;
+}
+
 .terminal {
   position: absolute;
   top: 31%;
   left: 0;
-  width: 73%;
+  width: 72%;
   height: 30%;
   /* background-image: url('/static/img/Terminal.png');
   background-size: 100% 100%; */
@@ -213,5 +247,57 @@ export default {
 .airport-closed .terminal:after {
   box-shadow: 0 0 40px -10px rgba(255, 187, 0, 0.479);
   background-color: black;
+}
+
+.forest,
+.forest:before,
+.forest:after {
+  width: 3vw;
+  height: 3vw;
+  border-radius: 50%;
+  /* box-shadow: 0 0 20px -5px rgba(0, 0, 0, .1); */
+  background-color: rgba(0, 150, 0, .2);
+  position: absolute;
+  top: -10%;
+  left: 20%;
+}
+
+.forest:before,
+.forest:after {
+  width: 4vw;
+  height: 4vw;
+  content: '';
+  background-color: rgba(100, 220, 200, .4);
+}
+
+.forest:before {
+  left: 8vw;
+  top: -3vw;
+  background-color: rgba(100, 220, 160, .3);
+}
+
+.forest:after {
+  left: -9vw;
+  top: -2vw;
+}
+
+.forest:nth-child(2) {
+  top: -5%;
+  left: auto;
+  right: 25%;
+  transform: scale(1.5) translateY(-80%) rotate(190deg);
+}
+
+.forest:nth-child(3) {
+  left: 15%;
+  top: 90%;
+  transform: scale(1.2) rotate(170deg);
+}
+
+.forest:nth-child(4) {
+  left: auto;
+  right: 20%;
+  top: 110%;
+  transform: scale(2) rotate(-5deg);
 }
 </style>

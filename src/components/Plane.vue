@@ -51,7 +51,7 @@ export default {
       if (this.plane.requestedLanding) {
         return '150%'
       } else if (this.plane.takingOff || this.plane.landing) {
-        return 71 + (this.plane.runway * 4) + '%'
+        return 73 + (this.plane.runway * 4) + '%'
       } else if (this.gate && this.gate.gateNumber > 8) {
         return 1 + (this.plane.gate - 8) * 8 + '%'
       } else {
@@ -60,7 +60,7 @@ export default {
     },
     planePositionY () {
       if (this.plane.landing || this.plane.takingOff) {
-        return '12%'
+        return '11%'
       } else if (this.gate && this.gate.gateNumber > 8) {
         return '60%'
       } else {
@@ -144,7 +144,7 @@ export default {
       let x = this.plane.gate
       if (x) {
         this.gate = _.find(this.$root.player.gates, { gateNumber: x })
-        if (this.gate.gateNumber > 11) {
+        if (this.gate.gateNumber > 8) {
           this.isBottomRow = true
         }
       }
@@ -186,11 +186,11 @@ export default {
 }
 
 .plane-img.at-gate {
-  animation: at-gate 2s forwards;
+  animation: at-gate 3s forwards;
 }
 
 .bottom-row .plane-img.at-gate {
-  animation: at-gate-bottom-row 2s forwards;
+  animation: at-gate-bottom-row 3s forwards;
 }
 
 .plane.taking-off .plane-img {
@@ -205,7 +205,7 @@ export default {
     transform: translateY(-100%) rotate(-90deg);
   }
   40% {
-    transform: translateY(-100%)  rotate(-180deg);
+    transform: translateY(-100%) rotate(-180deg);
   }
   100% {
     transform: rotate(-180deg);
@@ -240,8 +240,12 @@ export default {
 }
 
 @keyframes plane-landing {
-  from {
+  0% {
     transform: translateY(100vh) scale(1.3);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
   }
   to {
     transform: none;
@@ -249,11 +253,15 @@ export default {
 }
 
 @keyframes plane-taking-off {
-  from {
+  0% {
     transform: none;
   }
-  to {
+  50% {
+    opacity: 1;
+  }
+  100% {
     transform: translateY(100vh) scale(1.3);
+    opacity: 0;
   }
 }
 

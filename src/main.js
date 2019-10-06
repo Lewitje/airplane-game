@@ -85,7 +85,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 155000 * 20
+    this.player.cash = 155000 * 10
     this.buyGate()
     // this.buyGate()
     this.buyRunway()
@@ -136,20 +136,20 @@ new Vue({
       }
 
       if (this.mainTick === 200) {
-        bus.$emit('notification', 'The airport is closing soon, make sure the gates are empty to avoid fines.')
+        bus.$emit('important', 'The airport is closing soon, make sure the gates are empty to avoid fines.')
       }
 
       if (this.mainTick <= 60 || this.mainTick >= 220) {
         if (this.airport.open) {
           this.airport.open = false
           document.body.style.background = '#161718'
-          bus.$emit('notification', 'The airport has now closed. All remaining passengers will be unboarded, runways are closed. Boardings will resume when the airport opens in the morning.')
+          bus.$emit('important', 'The airport has now closed. All remaining passengers will be unboarded, runways are closed. Boardings will resume when the airport opens in the morning.')
         }
       } else {
         if (!this.airport.open) {
           this.airport.open = true
           document.body.style.background = '#f3f6fb'
-          bus.$emit('notification', 'The airport is now open. Boarding will begin shortly.')
+          bus.$emit('important', 'The airport is now open. Boarding will begin shortly.')
         }
       }
     },
@@ -157,7 +157,7 @@ new Vue({
       if (!this.airport.open) {
         return false
       }
-      if (Math.random() < 0.9 && this.getAllPlanesInLandingQueue().length < this.player.gates.length) {
+      if (Math.random() < 0.3 && this.getAllPlanesInLandingQueue().length < this.player.gates.length) {
         let plane = _.cloneDeep(defaultPlane)
         plane.landing = false
         plane.requestedLanding = true
@@ -195,18 +195,18 @@ new Vue({
       }
       console.log('buying gate')
       this.player.cash -= 50000
-      bus.$emit('notification', 'Purchased gate -50000')
+      bus.$emit('important', 'Purchased gate -50000')
       let gate = _.cloneDeep(defaultGate)
       gate.gateNumber = this.player.gates.length + 1
       this.player.gates.push(gate)
     },
     buyRunway () {
-      if (this.player.runways.length >= 6 || this.player.cash < 100000) {
+      if (this.player.runways.length >= 5 || this.player.cash < 100000) {
         return false
       }
       console.log('buying runway')
       this.player.cash -= 100000
-      bus.$emit('notification', 'Purchased runway -100000')
+      bus.$emit('important', 'Purchased runway -100000')
       let runway = _.cloneDeep(defaultRunway)
       runway.runwayNumber = this.player.runways.length + 1
       this.player.runways.push(runway)
@@ -216,7 +216,7 @@ new Vue({
         return false
       }
       this.player.cash -= 10000
-      bus.$emit('notification', 'Purchased plane -10000')
+      bus.$emit('important', 'Purchased plane -10000')
       let plane = _.cloneDeep(defaultPlane)
       plane.gate = this.findFreeGate()
       plane.id = parseInt(Math.random() * 100 * Math.random() / Math.random() * Math.random() * Math.random() * 1000000)
@@ -328,7 +328,7 @@ new Vue({
       }
 
       if (this.player.cash < 10000 && from > 10000) {
-        bus.$emit('error', 'Your cash is getting low!')
+        bus.$emit('important', 'Your cash is getting low!')
       }
     }
   }

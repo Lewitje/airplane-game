@@ -276,7 +276,6 @@ export default {
   background-color: hsl(45deg, 100%, 50%);
   border-radius: 2px;
   box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-  opacity: 0;
   pointer-events: none;
 }
 
@@ -299,14 +298,12 @@ export default {
 
 .gate-staffed .staff:before {
   opacity: 1;
-  animation: truck-before 2s forwards linear;
-  animation-delay: inherit;
+  animation: truck-before 3s linear forwards;
 }
 
 .gate-staffed .staff:after {
   opacity: 1;
-  animation: truck-after 5s forwards linear;
-  animation-delay: inherit;
+  animation: truck-after 6s linear forwards;
 }
 
 @keyframes truck-before {
