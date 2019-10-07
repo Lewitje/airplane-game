@@ -11,9 +11,9 @@
       <eva-icon name="alert-triangle-outline" width="18" height="18"></eva-icon>
     </div>
     <div class="sign takeoff" v-else-if="readyForTakeoff" @click="requestTakeoff" :class="{ disabled: !$root.airport.open }" title="Ready for takeoff"><eva-icon name="checkmark-outline" width="18" height="18"></eva-icon></div>
-    <div class="sign info" v-else-if="plane.unboarding" title="Passengers unboarding"><eva-icon name="trending-down-outline" width="18" height="18"></eva-icon> {{ plane.boarded }}</div>
+    <div class="sign info" v-else-if="plane.unboarding" title="Passengers unboarding"><eva-icon name="arrow-downward" width="18" height="18"></eva-icon> {{ plane.boarded }}</div>
     <div class="sign waiting" v-else-if="plane.requestedTakeoff" title="Waiting for takeoff slot"><eva-icon name="clock-outline" width="18" height="18"></eva-icon></div>
-    <div class="sign info" v-else-if="!plane.takingOff" title="Passengers boarding"><eva-icon name="trending-up-outline" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
+    <div class="sign info" v-else-if="!plane.takingOff" title="Passengers boarding"><eva-icon name="arrow-upward" width="18" height="18"></eva-icon> {{ 200 - plane.boarded }}</div>    
   </div>
 </template>
 
@@ -199,10 +199,12 @@ export default {
 
 @keyframes at-gate {
   0% {
-    transform: translateY(-100%) translateX(100%) rotate(-90deg);
+    transform: translateY(-100%) translateX(150%) rotate(-90deg);
+    opacity: 0;
   }
   20% {
     transform: translateY(-100%) rotate(-90deg);
+    opacity: 1;
   }
   40% {
     transform: translateY(-100%) rotate(-180deg);
@@ -214,10 +216,12 @@ export default {
 
 @keyframes at-gate-bottom-row {
   0% {
-    transform: translateY(100%) translateX(100%) rotate(-90deg);
+    transform: translateY(100%) translateX(150%) rotate(-90deg);
+    opacity: 0;
   }
   20% {
     transform: translateY(100%) rotate(-90deg);
+    opacity: 1;
   }
   40% {
     transform: translateY(100%);
@@ -241,7 +245,7 @@ export default {
 
 @keyframes plane-landing {
   0% {
-    transform: translateY(100vh) scale(1.3);
+    transform: translateY(100vh) scale(1.4);
     opacity: 0;
   }
   20% {
@@ -260,7 +264,7 @@ export default {
     opacity: 1;
   }
   100% {
-    transform: translateY(100vh) scale(1.3);
+    transform: translateY(100vh) scale(1.4);
     opacity: 0;
   }
 }

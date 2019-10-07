@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{ 'airport-closed': !$root.airport.open }">
     <div class="screen-too-small">
-      <img src="/static/img/plane.png" alt="" class="logo">
+      <img src="/static/img/plane.jpg" alt="" class="logo">
       <h1>Airport</h1>
       <p>A game where you manage an airport.</p>
       <p class="text-faded">Rotate your phone to continue.</p>
@@ -57,6 +57,8 @@ export default {
   padding: 0;
   margin: 0;
   user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -253,10 +255,10 @@ table {
 
 @keyframes logo {
   from {
-    transform: rotate(35deg);
+    transform: rotateZ(35deg);
   }
   to {
-    transform: rotate(55deg);
+    transform: rotateZ(55deg);
   }
 }
 
