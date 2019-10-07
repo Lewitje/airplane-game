@@ -95,6 +95,7 @@ export default {
       bus.$emit('notification', `Passenger departures terminal costs (${this.plane.passengerCapacity} X 10) +${this.plane.passengerCapacity * 10}`)
       bus.$emit('request-takeoff', this.plane)
       this.plane.requestedTakeoff = true
+      window.fbq('trackCustom', 'TakeoffRequested')
     },
     boardPassenger (x) {
       // Dont do anything if the plane is moving

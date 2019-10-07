@@ -102,6 +102,8 @@ new Vue({
     bus.$on('request-takeoff', this.requestTakeoff)
     bus.$on('plane-landed', this.planeLanded)
     bus.$on('staff-gate', this.staffGate)
+
+    window.fbq('trackCustom', 'GameStart')
   },
   methods: {
     save () {
@@ -199,6 +201,7 @@ new Vue({
         plane.id = parseInt(Math.random() * 100 * Math.random() / Math.random() * Math.random() * Math.random() * 1000000)
         this.player.planes.push(plane)
         bus.$emit('atc', 'Landing requested', plane.flightNumber, false)
+        window.fbq('trackCustom', 'LandingRequested')
       }
     },
     findFreeGate () {
@@ -241,6 +244,7 @@ new Vue({
       let gate = _.cloneDeep(defaultGate)
       gate.gateNumber = this.player.gates.length + 1
       this.player.gates.push(gate)
+      window.fbq('trackCustom', 'BuyGate')
     },
     buyRunway () {
       if (this.player.runways.length >= 5 || this.player.cash < 250000) {
@@ -252,6 +256,7 @@ new Vue({
       let runway = _.cloneDeep(defaultRunway)
       runway.runwayNumber = this.player.runways.length + 1
       this.player.runways.push(runway)
+      window.fbq('trackCustom', 'BuyRunway')
     },
     buyPlane () {
       if (this.player.planes.length >= this.player.gates.length || this.player.cash < 10000) {
@@ -287,6 +292,7 @@ new Vue({
           plane.runway = this.findFreeRunway()
           plane.takingOff = true
           bus.$emit('atc', `Takeoff approved. Use runway ${plane.runway}`, plane.flightNumber, true)
+          window.fbq('trackCustom', 'PlaneTookOff')
           // Plane takeoff timer
           setTimeout(() => {
             let i = _.findIndex(this.player.planes, { id: plane.id })
@@ -323,6 +329,7 @@ new Vue({
             plane.requestedLanding = false
             plane.landing = true
             bus.$emit('atc', `Landing approved. Use runway ${plane.runway} and gate ${plane.gateNumber}`, plane.flightNumber, true)
+            window.fbq('trackCustom', 'PlaneLanded')
             setTimeout(() => {
               plane.runway = false
               plane.landing = false
@@ -363,6 +370,7 @@ new Vue({
       let price = gate.passengersPerTick * 100
       this.player.cash -= price
       bus.$emit('notification', `Staff costs -${price}`)
+      window.fbq('trackCustom', 'StaffGate')
     },
     generateFlightNumber () {
       let r = Math.random().toString(36).substring(7).toUpperCase()
@@ -373,12 +381,14 @@ new Vue({
     'config.sandboxMode' () {
       if (this.config.sandboxMode) {
         this.player.cash = 100000000
+        window.fbq('trackCustom', 'SandboxMode')
       }
     },
     'player.cash' (to, from) {
       if (this.player.cash <= 0) {
         this.gameOver = true
         this.pause()
+        window.fbq('trackCustom', 'GameOver')
       }
 
       if (this.player.cash < 10000 && from > 10000) {

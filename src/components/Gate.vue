@@ -77,6 +77,7 @@ export default {
       this.gate.passengersPerTick = this.gate.passengersPerTick * 1.2
       this.$root.player.cash -= price
       bus.$emit('notification', `Upgraded gate -${price}`)
+      window.fbq('trackCustom', 'GateUpgraded')
     },
     staffGate () {
       if (!this.$root.airport.open || this.gate.staffed) {

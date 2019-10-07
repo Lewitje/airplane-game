@@ -66,7 +66,7 @@ export default {
   },
   data () {
     return {
-      visible: false,
+      visible: true,
       step: 1
     }
   },
@@ -76,6 +76,7 @@ export default {
     startTutorial () {
       this.step = 1
       this.visible = true
+      window.fbq('trackCustom', 'StartTutorial')
     }
   }
 }
