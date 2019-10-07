@@ -2,7 +2,7 @@
   <div>
     <div class="status-bar-wrapper">
       <div class="status-bar">
-        <div class="status-bar-item time" title="Airport open/closed">
+        <div class="status-bar-item time" title="Airport open/closed" :class="{ sunset: $root.mainTick >= 170 || $root.mainTick <= 90 }">
           <eva-icon v-if="$root.airport.open" :class="{ spin: $root.config.gameSpeed === 6, sun: $root.config.gameSpeed !== 0 }" name="sun-outline"></eva-icon>
           <eva-icon v-else name="moon-outline"></eva-icon>
           <span>{{ Math.floor($root.mainTick / 10) }}:00</span>
@@ -17,7 +17,7 @@
         <div class="status-bar-item" title="Waiting to land">
           <eva-icon name="diagonal-arrow-right-down-outline"></eva-icon> <span>{{ getLandings }}</span>
         </div>
-        <div class="status-bar-item clickable" :class="{ paused: $root.config.gameSpeed === 0 }" :title="`Normal / Fast / Pause`">
+        <div class="status-bar-item clickable" :class="{ paused: $root.config.gameSpeed === 0, 'super-speed': $root.config.gameSpeed === 12  }" :title="`Normal / Fast / Pause`">
           <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(6)"></eva-icon>
           <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 6" @click="setGameSpeed(0)"></eva-icon>
           <eva-icon name="flash-outline" v-else-if="$root.config.gameSpeed === 12" @click="setGameSpeed(0)"></eva-icon>
@@ -177,7 +177,7 @@ export default {
   color: white;
   fill: white;
   cursor: pointer;
-  border: 0;
+  /* border: 0; */
 }
 
 .status-bar-item .eva-hover {
@@ -195,6 +195,25 @@ export default {
 .status-bar-item.warning:hover{
    background-color: hsl(335, 100%, 50%);
    animation: warning 1s infinite;
+}
+
+.status-bar-item.clickable.super-speed,
+.status-bar-item.clickable.super-speed:hover {
+  background-color: hsl(45, 100%, 50%);
+  animation: super-speed .5s infinite;
+  fill: black;
+}
+
+@keyframes super-speed {
+  0%,
+  100% {
+    background-color: hsl(55, 100%, 50%);
+    transform: none;
+  }
+  50% {
+    background-color: hsl(35, 100%, 50%);
+    transform: scale(1.1);
+  }
 }
 
 @keyframes warning {
@@ -235,6 +254,10 @@ export default {
   background-color: rgb(62, 242, 255);
   z-index: -1;
   transition: all .5s;
+}
+
+.sunset .time-inner {
+  background-color: hsl(20deg, 100%, 80%);
 }
 
 .airport-closed .time-inner {
