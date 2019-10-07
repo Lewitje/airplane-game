@@ -116,7 +116,6 @@ new Vue({
         for (var key in o) {
           this[key] = o[key]
         }
-        this.pause()
       }
     },
     play () {
