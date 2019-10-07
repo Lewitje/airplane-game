@@ -116,6 +116,7 @@ new Vue({
         for (var key in o) {
           this[key] = o[key]
         }
+        this.pause()
       }
     },
     play () {
@@ -152,8 +153,6 @@ new Vue({
         let groundedPlaneCosts = _.filter(this.player.planes, { atGate: true }).length * 2000
         this.player.cash -= groundedPlaneCosts
         bus.$emit('notification', `Ground plane fine ${this.player.planes.length} X 2000 (-${groundedPlaneCosts})`)
-
-        this.save()
       }
 
       if (this.config.lastLandingSlot === this.mainTick) {
@@ -183,6 +182,7 @@ new Vue({
           this.config.gameSpeed = 1
           this.play()
           bus.$emit('important', 'The airport is now open. Boarding will begin shortly.')
+          this.save()
         }
       }
     },
