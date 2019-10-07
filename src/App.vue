@@ -68,6 +68,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
 body {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
