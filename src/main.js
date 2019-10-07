@@ -74,7 +74,10 @@ new Vue({
     config: {
       landingTime: 4,
       tickSpeed: 1000,
-      gameSpeed: 1
+      gameSpeed: 1,
+      skipNight: true,
+      sandboxMode: false,
+      lastLandingSlot: 200
     },
     statistics: {
       totalPlanesArrived: 0,
@@ -85,10 +88,9 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 310050 * 3
-    this.buyGate()
+    this.player.cash = 310050
     // this.buyGate()
-    this.buyRunway()
+    // this.buyRunway()
     this.play()
 
     bus.$on('buy-plane', this.buyPlane)
@@ -114,6 +116,7 @@ new Vue({
       this.checkLandings()
       this.checkTakeoffs()
       this.generateRandomLandings()
+      bus.$emit('tick')
     },
     updateDay () {
       this.mainTick++
@@ -143,18 +146,26 @@ new Vue({
         if (this.airport.open) {
           this.airport.open = false
           document.body.style.background = '#161718'
+          if (this.config.skipNight) {
+            this.pause()
+            this.config.gameSpeed = 12
+            this.play()
+          }
           bus.$emit('important', 'The airport has now closed. All remaining passengers will be unboarded, runways are closed. Boardings will resume when the airport opens in the morning.')
         }
       } else {
         if (!this.airport.open) {
           this.airport.open = true
           document.body.style.background = '#f3f6fb'
+          this.pause()
+          this.config.gameSpeed = 1
+          this.play()
           bus.$emit('important', 'The airport is now open. Boarding will begin shortly.')
         }
       }
     },
     generateRandomLandings () {
-      if (!this.airport.open) {
+      if (!this.airport.open || this.mainTick > this.config.lastLandingSlot) {
         return false
       }
       if (Math.random() < 0.3 && this.getAllPlanesInLandingQueue().length < this.player.gates.length) {
@@ -257,7 +268,7 @@ new Vue({
       }
     },
     checkLandings () {
-      if (!this.airport.open) {
+      if (!this.airport.open || this.mainTick > this.config.lastLandingSlot) {
         // REMOVE ALL PLANES IN QUEUE WHEN CLOSED
         let planesToLand = _.filter(this.player.planes, { requestedLanding: true })
         planesToLand.forEach((plane) => {
@@ -321,6 +332,11 @@ new Vue({
     }
   },
   watch: {
+    'config.sandboxMode' () {
+      if (this.config.sandboxMode) {
+        this.player.cash = 100000000
+      }
+    },
     'player.cash' (to, from) {
       if (this.player.cash <= 0) {
         this.gameOver = true

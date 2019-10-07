@@ -9,7 +9,7 @@
         <div>
           <h4>Gate</h4>
           <p>Gates receive passengers &amp; planes. They require staff.</p>
-          <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 16 || $root.player.cash < 50000 }"><eva-icon name="upload-outline"></eva-icon> Build gate ($50,000)</button>
+          <button @click="buyGate" :class="{ disabled: $root.player.gates.length === 16 || $root.player.cash < 50000 || !$root.player.runways.length }"><eva-icon name="upload-outline"></eva-icon> Build gate ($50,000)</button>
         </div>
         <div>
           <h4>Runway</h4>

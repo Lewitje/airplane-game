@@ -16,17 +16,17 @@
         <div class="text-faded" @click="showMenu = false">Close</div>
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers boarded / unboarded per tick</h4>
-        <p class="error" v-show="$root.statistics.totalPlanesDeparted < gate.passengersPerTick">You need to dispatch a minimum of {{ gate.passengersPerTick }} planes to unlock this.</p>
-        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < gate.passengersPerTick }">Upgrade {{ Math.ceil(gate.passengersPerTick * 1.2) }} (${{ (Math.ceil(gate.passengersPerTick * 1.2)) * 500 }})</button>
+        <p class="error" v-show="$root.statistics.totalPlanesDeparted < planesTillNextUpgrade">You need to dispatch a minimum of {{ planesTillNextUpgrade }} planes to unlock this.</p>
+        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < planesTillNextUpgrade }">Upgrade {{ Math.ceil(gate.passengersPerTick * 1.2) }} (${{ planesTillNextUpgrade * 100 }})</button>
         <div>
           <h4>Permanently staff gate</h4>
           <p>Each time a plane takesoff staff are automatically requested for the next flight.</p>
-          <button @click="addPermanentStaff" :class="{ disabled: gate.permanentlyStaffed }">Add permanent staff (10000)</button>
+          <button @click="addPermanentStaff" :class="{ disabled: gate.permanentlyStaffed }">Add permanent staff (10,000)</button>
         </div>
         <div>
           <h4>Auto approve takeoff</h4>
           <p>When the plane is fully boarded the plane will automatically request takeoff.</p>
-          <button @click="autoApproveTakeoff" :class="{ disabled: gate.autoApproveTakeoff }">Auto approve takeoff (10000)</button>
+          <button @click="autoApproveTakeoff" :class="{ disabled: gate.autoApproveTakeoff }">Auto approve takeoff (10,000)</button>
         </div>
         <div class="text-faded" @click="showMenu = false">Close</div>
       </div>
@@ -66,12 +66,15 @@ export default {
         y = '61%'
       }
       return y
+    },
+    planesTillNextUpgrade () {
+      return Math.ceil((this.gate.passengersPerTick * 10) * 1.2)
     }
   },
   methods: {
     upgrade () {
-      let price = Math.ceil(this.gate.passengersPerTick * 1.2) * 500
-      this.gate.passengersPerTick = Math.ceil(this.gate.passengersPerTick * 1.2)
+      let price = this.planesTillNextUpgrade * 100
+      this.gate.passengersPerTick = this.planesTillNextUpgrade
       this.$root.player.cash -= price
       bus.$emit('notification', `Upgraded gate -${price}`)
     },

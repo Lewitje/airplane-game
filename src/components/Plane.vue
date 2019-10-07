@@ -36,15 +36,18 @@ export default {
   },
   mounted () {
     this.plane.fuelled = true
-    this.timer = setInterval(() => {
-      this.tick()
-    }, 1000)
+    // this.timer = setInterval(() => {
+    //   this.tick()
+    // }, 1000)
     bus.$on('dispatch-all-planes', () => {
       this.requestTakeoff()
     })
+    bus.$on('tick', () => {
+      this.tick()
+    })
   },
   beforeDestroy () {
-    clearInterval(this.timer)
+    // clearInterval(this.timer)
   },
   computed: {
     planePositionX () {

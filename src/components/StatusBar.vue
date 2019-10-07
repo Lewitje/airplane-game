@@ -20,6 +20,7 @@
         <div class="status-bar-item clickable" :class="{ paused: $root.config.gameSpeed === 0 }" :title="`Normal / Fast / Pause`">
           <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(6)"></eva-icon>
           <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 6" @click="setGameSpeed(0)"></eva-icon>
+          <eva-icon name="flash-outline" v-else-if="$root.config.gameSpeed === 12" @click="setGameSpeed(0)"></eva-icon>
           <eva-icon name="pause-circle-outline" v-else @click="setGameSpeed(1)"></eva-icon>
         </div>
       </div>

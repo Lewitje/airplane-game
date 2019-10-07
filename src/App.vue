@@ -8,6 +8,7 @@
     </div>
     <tutorial></tutorial>
     <main>
+      <settings></settings>
       <notifications></notifications>
       <div class="game-over" v-if="$root.gameOver">
         <h1>Game Over</h1>
@@ -30,6 +31,7 @@ import StatusBar from './components/statusBar'
 import Store from './components/store'
 import Notifications from './components/notifications'
 import Tutorial from './components/tutorial'
+import Settings from './components/settings'
 
 export default {
   name: 'app',
@@ -39,7 +41,8 @@ export default {
     StatusBar,
     Store,
     Notifications,
-    Tutorial
+    Tutorial,
+    Settings
   },
   methods: {
     restart () {
@@ -81,14 +84,14 @@ textarea {
 h1,
 h2,
 h3 {
-  margin-bottom: 15px;
-  font-weight: 500;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 h4,
 h5 {
-  margin-bottom: 10px;
-  font-weight: 500;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 p {
@@ -109,7 +112,7 @@ h3 {
 
 h4 {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .text-faded {
