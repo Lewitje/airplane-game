@@ -20,6 +20,7 @@
       </board>
       <status-bar />
       <store />
+      <atc />
     </main>
   </div>
 </template>
@@ -32,6 +33,7 @@ import Store from './components/store'
 import Notifications from './components/notifications'
 import Tutorial from './components/tutorial'
 import Settings from './components/settings'
+import Atc from '@/components/atc'
 
 export default {
   name: 'app',
@@ -42,7 +44,8 @@ export default {
     Store,
     Notifications,
     Tutorial,
-    Settings
+    Settings,
+    Atc
   },
   methods: {
     restart () {

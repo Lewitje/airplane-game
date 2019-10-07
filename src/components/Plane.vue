@@ -91,6 +91,7 @@ export default {
         return false
       }
       this.readyForTakeoff = false
+      bus.$emit('atc', 'Takeoff requested', this.plane.flightNumber, false)
       bus.$emit('notification', `Passenger departures terminal costs (${this.plane.passengerCapacity} X 10) +${this.plane.passengerCapacity * 10}`)
       bus.$emit('request-takeoff', this.plane)
       this.plane.requestedTakeoff = true

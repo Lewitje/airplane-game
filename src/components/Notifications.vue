@@ -20,8 +20,7 @@
     v-if="notification.type === 'IMPORTANT'"
     class="notification"
     :class="{ error: notification.type === 'IMPORTANT' }"
-    :key="notification.id"
-    :style="{ top: `${i * 5}px`, opacity: 1 - (i * 0.2), 'z-index': 10-i }">
+    :key="notification.id">
       {{ notification.content }}
     </div>
   </div>
@@ -120,7 +119,7 @@ export default {
   /* box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .5); */
   cursor: pointer;
   padding: 10px 15px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   text-align: left;
   border-radius: 10px;
 }
@@ -157,7 +156,7 @@ export default {
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, .2);
   border-radius: 4px;
   fill: hsl(40deg, 100%, 50%);
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .achievement .eva-hover {

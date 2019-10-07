@@ -6,16 +6,6 @@
     <div class="settings" v-if="showMenu">
       <div class="settings-inner">
         <h2>Settings</h2>
-        <label class="checkbox">
-          <input type="checkbox" v-model="$root.config.skipNight">
-          <span>Skip through night</span>
-          <p>Super speed through the night.</p>
-        </label>
-        <label class="checkbox" :class="{ disabled: $root.config.sandboxMode }">
-          <input type="checkbox" v-model="$root.config.sandboxMode">
-          <span>Sandbox mode</span>
-          <p>Lots of money (Cannot be undone).</p>
-        </label>
         <label class="range" :class="{ disabled: $root.config.sandboxMode }">
           <span class="title">Last landing time</span>
           <div class="range-bar">
@@ -37,6 +27,18 @@
           <!-- <span class="value"></span><br/> -->
           <span><b>{{ (220 - $root.config.lastLandingSlot) / 10 }} hours</b> before closure</span><br/>
           <p>No planes may land after this time. (helps with automated gates &amp; fines)</p>
+        </label>
+        
+        <label class="checkbox">
+          <input type="checkbox" v-model="$root.config.skipNight">
+          <span>Skip through night</span>
+          <p>Super speed through the night.</p>
+        </label>
+
+        <label class="checkbox" :class="{ disabled: $root.config.sandboxMode }">
+          <input type="checkbox" v-model="$root.config.sandboxMode">
+          <span>Sandbox mode</span>
+          <p>Lots of money (Cannot be undone).</p>
         </label>
       </div>
     </div>

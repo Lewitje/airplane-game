@@ -11,6 +11,7 @@ export const bus = new Vue()
 
 const defaultPlane = {
   id: 0,
+  flightNumber: null,
   fuelled: false,
   boarded: 0,
   unboarding: false,
@@ -138,6 +139,10 @@ new Vue({
         bus.$emit('notification', `Ground plane fine ${this.player.planes.length} X 2000 (-${groundedPlaneCosts})`)
       }
 
+      if (this.config.lastLandingSlot === this.mainTick) {
+        bus.$emit('important', 'Arrivals closed. Departures are still open.')
+      }
+
       if (this.mainTick === 200) {
         bus.$emit('important', 'The airport is closing soon, make sure the gates are empty to avoid fines.')
       }
@@ -171,11 +176,13 @@ new Vue({
       if (Math.random() < 0.3 && this.getAllPlanesInLandingQueue().length < this.player.gates.length) {
         let plane = _.cloneDeep(defaultPlane)
         plane.landing = false
+        plane.flightNumber = this.generateFlightNumber()
         plane.requestedLanding = true
         plane.unboarding = true
         plane.boarded = 200
         plane.id = parseInt(Math.random() * 100 * Math.random() / Math.random() * Math.random() * Math.random() * 1000000)
         this.player.planes.push(plane)
+        bus.$emit('atc', 'Landing requested', plane.flightNumber, false)
       }
     },
     findFreeGate () {
@@ -255,6 +262,7 @@ new Vue({
           plane.gate = false
           plane.runway = this.findFreeRunway()
           plane.takingOff = true
+          bus.$emit('atc', `Takeoff approved. Use runway ${plane.runway}`, plane.flightNumber, true)
           // Plane takeoff timer
           setTimeout(() => {
             let i = _.findIndex(this.player.planes, { id: plane.id })
@@ -272,6 +280,7 @@ new Vue({
         // REMOVE ALL PLANES IN QUEUE WHEN CLOSED
         let planesToLand = _.filter(this.player.planes, { requestedLanding: true })
         planesToLand.forEach((plane) => {
+          bus.$emit('atc', 'Landing denied', plane.flightNumber, true)
           let i = _.findIndex(this.player.planes, {id: plane.id})
           this.$delete(this.player.planes, i)
         })
@@ -289,6 +298,7 @@ new Vue({
             plane.runway = runway
             plane.requestedLanding = false
             plane.landing = true
+            bus.$emit('atc', `Landing approved. Use runway ${plane.runway} and gate ${plane.gate}`, plane.flightNumber, true)
             setTimeout(() => {
               plane.runway = false
               plane.landing = false
@@ -329,6 +339,10 @@ new Vue({
       let price = gate.passengersPerTick * 100
       this.player.cash -= price
       bus.$emit('notification', `Staff costs -${price}`)
+    },
+    generateFlightNumber () {
+      let r = Math.random().toString(36).substring(7).toUpperCase()
+      return `AIR${r}`
     }
   },
   watch: {

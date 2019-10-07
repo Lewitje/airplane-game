@@ -68,7 +68,7 @@ export default {
       return y
     },
     planesTillNextUpgrade () {
-      return Math.ceil((this.gate.passengersPerTick * 10) * 1.2)
+      return Math.ceil((this.gate.passengersPerTick * 5) * 1.2)
     }
   },
   methods: {
