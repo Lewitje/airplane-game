@@ -46,7 +46,7 @@
       <div class="tutorial-card" v-if="step === 6">
         <eva-icon name="arrow-forward-outline" :width="40" :height="40"></eva-icon>
         <h2>Hurry up!</h2>
-        <p>Click on planes to hurry up passengers.</p>
+        <p>Spam click on planes to hurry up passengers.</p>
         <button @click="step--">Back</button>
         <button @click="visible = false">Finish</button>
       </div>
@@ -90,7 +90,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 20;
-  backdrop-filter: blur(3px) brightness(.8);
+  backdrop-filter: brightness(0.9) blur(3px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,7 +113,6 @@ export default {
   width: 400px;
   padding: 30px;
   background-color: white;
-  box-shadow: 0 20px 20px -5px rgba(0, 0, 0, .1);
   border-radius: 10px;
 }
 
@@ -122,7 +121,6 @@ export default {
 }
 
 .toggle-help {
-  top: auto;
-  bottom: 90px;
+  top: 80px
 }
 </style>

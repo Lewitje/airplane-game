@@ -1,11 +1,16 @@
 <template>
   <div :class="{ open: showMenu }">
     <div class="settings-toggle toggle" @click="showMenu = !showMenu" title="Open store">
-      <eva-icon name="toggle-right-outline"></eva-icon>
+      <eva-icon name="settings-outline"></eva-icon>
     </div>
     <div class="settings" v-if="showMenu">
       <div class="settings-inner">
-        <h2>Settings</h2>
+        <h2>Options</h2>
+        <div>
+          <button @click="restart">Restart game</button>
+          <button @click="$root.save">Save game</button>
+          <a href="https://github.com/Lewitje/Airplane-game" target="_blank">Github</a>
+        </div>
         <label class="range" :class="{ disabled: $root.config.sandboxMode }">
           <span class="title">Last landing time</span>
           <div class="range-bar">
@@ -28,7 +33,7 @@
           <span><b>{{ (220 - $root.config.lastLandingSlot) / 10 }} hours</b> before closure</span><br/>
           <p>No planes may land after this time. (helps with automated gates &amp; fines)</p>
         </label>
-        
+
         <label class="checkbox">
           <input type="checkbox" v-model="$root.config.skipNight">
           <span>Skip through night</span>
@@ -61,6 +66,10 @@ export default {
   created () {
   },
   methods: {
+    restart () {
+      window.localStorage.removeItem('saveGame')
+      location.reload()
+    }
   }
 }
 </script>
@@ -70,7 +79,7 @@ export default {
 .settings {
   position: fixed;
   bottom: 15px;
-  right: 90px;
+  left: 80px;
   width: 350px;
   z-index: 20;
 }
@@ -87,7 +96,9 @@ export default {
 
 .settings-toggle {
   top: auto;
-  bottom: 165px;
+  right: auto;
+  left: 15px;
+  bottom: 15px;
 }
 
 .checkbox,

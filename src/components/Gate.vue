@@ -16,8 +16,8 @@
         <div class="text-faded" @click="showMenu = false">Close</div>
         <h3>Upgrade gate {{ gate.gateNumber }}</h3>
         <h4>Passengers boarded / unboarded per tick</h4>
-        <p class="error" v-show="$root.statistics.totalPlanesDeparted < planesTillNextUpgrade">You need to dispatch a minimum of {{ planesTillNextUpgrade }} planes to unlock this.</p>
-        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < planesTillNextUpgrade }">Upgrade {{ Math.ceil(gate.passengersPerTick * 1.2) }} (${{ planesTillNextUpgrade * 100 }})</button>
+        <p class="error" v-show="$root.statistics.totalPlanesDeparted < planesTillNextUpgrade && gate.passengersPerTick < 24">You need to dispatch a minimum of {{ planesTillNextUpgrade }} planes to unlock this.</p>
+        <button @click="upgrade" :class="{ disabled: $root.statistics.totalPlanesDeparted < planesTillNextUpgrade && gate.passengersPerTick < 25 }">Upgrade {{ Math.ceil(gate.passengersPerTick * 1.2) }} (${{ planesTillNextUpgrade * 100 }})</button>
         <div>
           <h4>Permanently staff gate</h4>
           <p>Each time a plane takesoff staff are automatically requested for the next flight.</p>
@@ -68,13 +68,13 @@ export default {
       return y
     },
     planesTillNextUpgrade () {
-      return Math.ceil((this.gate.passengersPerTick * 5) * 1.2)
+      return Math.ceil((this.gate.passengersPerTick * 5) * this.gate.passengersPerTick)
     }
   },
   methods: {
     upgrade () {
       let price = this.planesTillNextUpgrade * 100
-      this.gate.passengersPerTick = this.planesTillNextUpgrade
+      this.gate.passengersPerTick = this.gate.passengersPerTick * 1.2
       this.$root.player.cash -= price
       bus.$emit('notification', `Upgraded gate -${price}`)
     },
@@ -227,16 +227,16 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 90;
-  backdrop-filter: blur(3px) brightness(.8);
+  backdrop-filter: blur(3px) brightness(.9);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .menu-inner {
-  width: 350px;
+  width: 400px;
   max-height: 80vh;
-  padding: 10px 15px;
+  padding: 10px 30px;
   border-radius: 10px;
   z-index: 20;
   background-color: white;

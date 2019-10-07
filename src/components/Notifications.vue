@@ -109,24 +109,30 @@ export default {
   position: fixed;
   top: 15px;
   right: 90px;
-  width: 250px;
+  width: 200px;
   z-index: 19;
 }
 
 .notification {
   background-color: hsl(215deg, 30%, 85%);
   color: black;
-  /* box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .5); */
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .2);
   cursor: pointer;
-  padding: 10px 15px;
+  padding: 10px;
   margin-bottom: 5px;
   text-align: left;
-  border-radius: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  pointer-events: none;
 }
 
 .notification.error {
-  background-color: hsl(215, 100%, 50%);
-  color: white;
+  background-color: white;
+  color: black;
+}
+
+.notification.error:hover {
+  opacity: 1;
 }
 
 .notifications {

@@ -22,7 +22,7 @@ const defaultPlane = {
   atGate: false,
   schedule: null,
   passengerCapacity: 200,
-  gate: false,
+  gateNumber: false,
   runway: false,
   position: {
     x: 0,
@@ -92,6 +92,7 @@ new Vue({
     this.player.cash = 310050
     // this.buyGate()
     // this.buyRunway()
+    this.load()
     this.play()
 
     bus.$on('buy-plane', this.buyPlane)
@@ -103,6 +104,20 @@ new Vue({
     bus.$on('staff-gate', this.staffGate)
   },
   methods: {
+    save () {
+      let game = JSON.stringify(this.$data)
+      window.localStorage.setItem('saveGame', game)
+      bus.$emit('important', 'Game autosaved.')
+    },
+    load () {
+      let game = window.localStorage.getItem('saveGame')
+      if (game) {
+        let o = JSON.parse(game)
+        for (var key in o) {
+          this[key] = o[key]
+        }
+      }
+    },
     play () {
       this.gameTimer = setInterval(() => {
         this.tick()
@@ -137,6 +152,8 @@ new Vue({
         let groundedPlaneCosts = _.filter(this.player.planes, { atGate: true }).length * 2000
         this.player.cash -= groundedPlaneCosts
         bus.$emit('notification', `Ground plane fine ${this.player.planes.length} X 2000 (-${groundedPlaneCosts})`)
+
+        this.save()
       }
 
       if (this.config.lastLandingSlot === this.mainTick) {
@@ -187,24 +204,32 @@ new Vue({
     },
     findFreeGate () {
       let x = false
+      let gatesList = []
       this.player.gates.forEach((gate) => {
-        if (!_.find(this.player.planes, { gate: gate.gateNumber }) && gate.staffed) {
-          x = gate.gateNumber
+        if (!_.find(this.player.planes, { gateNumber: gate.gateNumber }) && gate.staffed) {
+          gatesList.push(gate.gateNumber)
         }
       })
-      // console.log(x)
+      console.log({gatesList})
+      if (gatesList.length) {
+        x = gatesList[Math.floor(Math.random() * gatesList.length)]
+      }
       return x
     },
     findFreeRunway () {
       let x = false
+      let runwaysList = []
       this.player.runways.forEach((runway) => {
         console.log('checking runway ' + runway.runwayNumber)
         let planes = _.filter(this.player.planes, { runway: runway.runwayNumber })
         if (!planes.length) {
           console.log('Runway free ' + runway.runwayNumber, planes)
-          x = runway.runwayNumber
+          runwaysList.push(runway.runwayNumber)
         }
       })
+      if (runwaysList.length) {
+        x = runwaysList[Math.floor(Math.random() * runwaysList.length)]
+      }
       return x
     },
     buyGate () {
@@ -236,7 +261,7 @@ new Vue({
       this.player.cash -= 10000
       bus.$emit('important', 'Purchased plane -10000')
       let plane = _.cloneDeep(defaultPlane)
-      plane.gate = this.findFreeGate()
+      plane.gateNumber = this.findFreeGate()
       plane.id = parseInt(Math.random() * 100 * Math.random() / Math.random() * Math.random() * Math.random() * 1000000)
       this.player.planes.push(plane)
     },
@@ -256,10 +281,10 @@ new Vue({
       if (this.findFreeRunway()) {
         let plane = _.find(this.player.planes, { requestedTakeoff: true })
         if (plane) {
-          this.unstaffGate(plane.gate)
+          this.unstaffGate(plane.gateNumber)
           plane.requestedTakeoff = false
           plane.atGate = false
-          plane.gate = false
+          plane.gateNumber = false
           plane.runway = this.findFreeRunway()
           plane.takingOff = true
           bus.$emit('atc', `Takeoff approved. Use runway ${plane.runway}`, plane.flightNumber, true)
@@ -294,11 +319,11 @@ new Vue({
           let runway = this.findFreeRunway()
           if (plane && !plane.runway && gate && runway) {
             console.log('free gate + runway for landing', gate, runway, plane)
-            plane.gate = gate
+            plane.gateNumber = gate
             plane.runway = runway
             plane.requestedLanding = false
             plane.landing = true
-            bus.$emit('atc', `Landing approved. Use runway ${plane.runway} and gate ${plane.gate}`, plane.flightNumber, true)
+            bus.$emit('atc', `Landing approved. Use runway ${plane.runway} and gate ${plane.gateNumber}`, plane.flightNumber, true)
             setTimeout(() => {
               plane.runway = false
               plane.landing = false

@@ -56,9 +56,9 @@ export default {
       } else if (this.plane.takingOff || this.plane.landing) {
         return 73 + (this.plane.runway * 4) + '%'
       } else if (this.gate && this.gate.gateNumber > 8) {
-        return 1 + (this.plane.gate - 8) * 8 + '%'
+        return 1 + (this.plane.gateNumber - 8) * 8 + '%'
       } else {
-        return 1 + this.plane.gate * 8 + '%'
+        return 1 + this.plane.gateNumber * 8 + '%'
       }
     },
     planePositionY () {
@@ -144,8 +144,8 @@ export default {
     }
   },
   watch: {
-    'plane.gate' () {
-      let x = this.plane.gate
+    'plane.gateNumber' () {
+      let x = this.plane.gateNumber
       if (x) {
         this.gate = _.find(this.$root.player.gates, { gateNumber: x })
         if (this.gate.gateNumber > 8) {

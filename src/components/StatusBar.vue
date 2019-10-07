@@ -11,16 +11,16 @@
         <div class="status-bar-item clickable" :class="{ warning: $root.player.cash < 10000 }" title="Balance" @click="showCashflow = !showCashflow">
           <eva-icon name="credit-card-outline"></eva-icon> <span>{{ getCash }}</span>
         </div>
-        <div class="status-bar-item" title="Waiting to takeoff">
+        <div class="status-bar-item" title="Waiting to takeoff" :class="{ closed: !$root.airport.open }">
           <eva-icon name="diagonal-arrow-right-up-outline"></eva-icon> <span>{{ getTakeoffs }}</span>
         </div>
-        <div class="status-bar-item" title="Waiting to land">
+        <div class="status-bar-item" title="Waiting to land" :class="{ closed: $root.mainTick >= $root.config.lastLandingSlot || !$root.airport.open }">
           <eva-icon name="diagonal-arrow-right-down-outline"></eva-icon> <span>{{ getLandings }}</span>
         </div>
         <div class="status-bar-item clickable" :class="{ paused: $root.config.gameSpeed === 0, 'super-speed': $root.config.gameSpeed === 12  }" :title="`Normal / Fast / Pause`">
           <eva-icon name="arrow-ios-forward-outline" v-if="$root.config.gameSpeed === 1" @click="setGameSpeed(6)"></eva-icon>
           <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 6" @click="setGameSpeed(0)"></eva-icon>
-          <eva-icon name="flash-outline" v-else-if="$root.config.gameSpeed === 12" @click="setGameSpeed(0)"></eva-icon>
+          <eva-icon name="arrowhead-right" v-else-if="$root.config.gameSpeed === 12" @click="setGameSpeed(0)"></eva-icon>
           <eva-icon name="pause-circle-outline" v-else @click="setGameSpeed(1)"></eva-icon>
         </div>
       </div>
@@ -170,6 +170,7 @@ export default {
   justify-content: center;
   align-items: center;
   border: 2px solid black;
+  font-weight: 600;
 }
 
 .status-bar-item.clickable {
@@ -187,6 +188,11 @@ export default {
 
 .status-bar-item.clickable:hover {
   background-color: hsl(215deg, 100%, 50%);
+}
+
+.status-bar-item.closed {
+  fill: hsl(335, 100%, 50%);
+  color: hsl(335, 100%, 50%);
 }
 
 .status-bar-item.paused,

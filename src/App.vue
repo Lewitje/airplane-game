@@ -49,6 +49,7 @@ export default {
   },
   methods: {
     restart () {
+      window.localStorage.removeItem('saveGame')
       location.reload()
     }
   }
@@ -126,7 +127,8 @@ h4 {
   color: hsl(340deg, 100%, 50%);
 }
 
-button {
+button,
+a {
   appearance: none;
   border: 0;
   box-shadow: none;
@@ -145,20 +147,26 @@ button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
 }
 
-button + button {
+button + a,
+a + button,
+button + button,
+a + a {
   margin-left: 10px;
   margin-bottom: 10px;
 }
 
-button:hover {
+button:hover,
+a:hover {
   background-color: black;
   color: white;
   fill: white;
 }
 
-button:active {
+button:active,
+a:active {
   transform: scale(0.95);
 }
 
@@ -195,12 +203,13 @@ main {
   position: fixed;
   top: 15px;
   right: 15px;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background-color: white;
+  border: 2px solid black;
   z-index: 20;
-  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .2);
+  /* box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .2); */
   cursor: pointer;
   display: flex;
   justify-content: center;
