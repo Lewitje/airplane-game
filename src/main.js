@@ -85,7 +85,7 @@ new Vue({
     }
   },
   created () {
-    this.player.cash = 310050 * 100
+    this.player.cash = 310050 * 3
     this.buyGate()
     // this.buyGate()
     this.buyRunway()
